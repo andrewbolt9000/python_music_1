@@ -81,7 +81,7 @@ class NoteIterator:
 
 class NoteInterval:
 	INTERVAL_NAMES = [
-		'root'
+		'root',
 		'minor 2',
 		'major 2',
 		'minor 3',
@@ -113,7 +113,7 @@ class NoteInterval:
 
 	@property
 	def interval_name(self):
-		self.NoteInterval[self._semitones]
+		return self.INTERVAL_NAMES[self._semitones]
 
 	@property
 	def semitones(self):
@@ -124,6 +124,7 @@ class Note:
 
 	NOTE_NAMES_2 = [
 		'C',
+		'C#',
 		'D',
 		'D#',
 		'E',
@@ -158,17 +159,18 @@ class Note:
 		self._a_tuning = a_tuning
 
 		if name is not None:
+			assert octave is not None 
 			self._name = name.upper()
 			self._frequency = Note.name_to_frequency(
 				name=self._name,
 				a_tuning=self._a_tuning)
-		elif frequency is not None:
-			self._frequency = frequency
-			self._name = Note.frequency_to_name(
-				frequency=self._frequency,
-				a_tuning=self._a_tuning)
-		elif semitones_from_a is not None:
-			self._frequency = Note.frequency_of_interval(semitones=semitones_from_a, target_frequency=a_tuning)
+		# elif frequency is not None:
+		# 	self._frequency = frequency
+		# 	self._name = Note.frequency_to_name(
+		# 		frequency=self._frequency,
+		# 		a_tuning=self._a_tuning)
+		# elif semitones_from_a is not None:
+		# 	self._frequency = Note.frequency_of_interval(semitones=semitones_from_a, target_frequency=a_tuning)
 			
 		elif full_name is not None:
 			name_and_octave = Note.full_name_to_name_and_octave(full_name)
@@ -183,24 +185,18 @@ class Note:
 
 	@staticmethod
 	def full_name_to_name_and_octave(full_name):
-		Note.validate_full_name(full_name)
 		if full_name[1] != '#':
-			assert full_name[0:1] in Note.NOTE_NAMES_2
 			name = full_name[0:1]
 			octave = int(full_name[1:])
 		elif full_name[1] == '#':
-			assert full_name[0:2] in Note.NOTE_NAMES_2
 			name = full_name[0:2]
 			octave = int(full_name[2:])
+		# Validate
+		print(name)
+		assert name in Note.NOTE_NAMES_2
+		assert octave in list(range(0,8))
 		return dict(name=name, octave=octave)
 
-	@staticmethod
-	def validate_full_name(full_name):
-		assert full_name[0] in Note.NOTE_NAMES, f"Note {full_name} note supported"
-		assert full_name[1] in ['#'] + list(range(0, 8)), f"Note {full_name} note supported"
-		if full_name[1] == '#':
-			assert int(full_name[2:]) in list(range(0, 8)), f"Note {full_name} note supported"
-	
 
 
 	# This is maybe a bad idea but different types are returned based on the input types.
