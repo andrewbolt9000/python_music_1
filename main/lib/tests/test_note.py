@@ -30,6 +30,31 @@ class TestNote:
 		assert n1.absolute_value == n2.absolute_value 
 
 
+	# def test_addition(self):
+	# 	note = Note(full_name='C1')
+	# 	interval = NoteInterval(7)
+	# 	result = note + interval 
+	# 	assert result.full_name == 'G1'
+
+	def test_subtraction(self):
+		note_1 = Note(full_name='A3')
+		note_2 = Note(full_name='C3')
+
+		result = note_1 - note_2
+		assert type(result) is NoteInterval
+		assert result.semitones == 9
+
+
+
+	def test_subtraction_negative_results(self):
+		note_1 = Note(full_name='A3')
+		note_2 = Note(full_name='C3')
+
+		with pytest.raises(AssertionError) as excinfo:
+			result_interval = note_2 - note_1
+			assert 'For now.........' in str(excinfo.value)
+
+
 
 class TestNoteInterval:
 
@@ -42,8 +67,17 @@ class TestNoteInterval:
 		note = Note(full_name='C1')
 		interval = NoteInterval(7)
 		result = note + interval 
+		assert type(result) is Note
 		assert result.full_name == 'G1'
 
+	def test_subtraction(self):
+		note = Note(full_name='C1')
+		interval = NoteInterval(7)
+		result = note - interval 
+		assert type(result) is Note		
+		assert result.full_name == 'F0'
+
+		
 		
 
 

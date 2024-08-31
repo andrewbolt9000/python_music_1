@@ -192,7 +192,6 @@ class Note:
 			name = full_name[0:2]
 			octave = int(full_name[2:])
 		# Validate
-		print(name)
 		assert name in Note.NOTE_NAMES_2
 		assert octave in list(range(0,8))
 		return dict(name=name, octave=octave)
@@ -213,6 +212,7 @@ class Note:
 	def __sub__(self, obj):
 		if type(obj) is Note:
 			difference = self.absolute_value - obj.absolute_value
+			assert difference >= 0, 'For now..........'
 			return NoteInterval(semitones=difference)
 		elif type(obj) is NoteInterval:
 			difference = self.absolute_value - obj.semitones
