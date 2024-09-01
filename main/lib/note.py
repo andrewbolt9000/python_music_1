@@ -23,6 +23,12 @@ class NoteError(Exception):
         super().__init__(message)
            
 
+class NoteIntervalError(Exception):
+    def __init__(self, message, errors=None):            
+        # Call the base class constructor with the parameters it needs
+        super().__init__(message)
+           
+
 NOTE_ITERATORE_DIRECTION_HIGHER = 'higher'
 NOTE_ITERATORE_DIRECTION_LOWER = 'lower'
 class NoteIterator:
@@ -107,17 +113,52 @@ class NoteInterval:
 		'* major 7',		
 	]
 	_semitones = None
-	def __init__(self, semitones):
-		assert semitones >= 0, 'Invalid NoteInterval'
-		self._semitones = semitones
+	_name = None
+	def __init__(self, semitones=None, name=None):
+		assert semitones is not None or name is not None, 'NoteInterval requires semitones or name args'
+		# xor
+		assert bool(semitones is not None) != bool(name is not None), 'NoteInterval can not have both semitones and name set'
+		
+		if name is not None:
+			self.name = name 
+
+		elif semitones is not None:
+			assert semitones >= 0, 'Invalid NoteInterval'
+			self._semitones = semitones
 
 	@property
-	def interval_name(self):
-		return self.INTERVAL_NAMES[self._semitones]
+	def name(self):
+		if self._name is None:
+			self._name = self.INTERVAL_NAMES[self._semitones]
+		return self._name 
+
+	@name.setter
+	def name(self, value):
+		# if the name is changed, update the semitones
+		self._semitones = NoteInterval.name_to_semitones(name=value)
+
+	@staticmethod
+	def name_to_semitones(name):
+		assert name in NoteInterval.INTERVAL_NAMES, 'invalid interval name'
+		i = NoteInterval.INTERVAL_NAMES.index(name)
+		return i 
 
 	@property
 	def semitones(self):
 		return self._semitones 
+
+
+	# This is maybe a bad idea but different types are returned based on the input types.
+	def __add__(self, obj):
+		if type(obj) is Note:
+			raise NoteError('Cant add these types. FOR NOW')
+		elif type(obj) is NoteInterval:
+			result = self.semitones + obj.semitones 
+			return NoteInterval(semitones=result)
+		else:
+			raise NoteError('Cant add these types.')
+
+
 
 class Note:
 	SPEED_OF_SOUND_METER_PER_SECOND = 343
@@ -212,7 +253,7 @@ class Note:
 	def __sub__(self, obj):
 		if type(obj) is Note:
 			difference = self.absolute_value - obj.absolute_value
-			assert difference >= 0, 'For now..........'
+			assert difference >= 0, 'For now.........'
 			return NoteInterval(semitones=difference)
 		elif type(obj) is NoteInterval:
 			difference = self.absolute_value - obj.semitones
