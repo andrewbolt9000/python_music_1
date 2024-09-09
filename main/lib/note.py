@@ -118,18 +118,22 @@ class NoteInterval:
 		assert semitones is not None or name is not None, 'NoteInterval requires semitones or name args'
 		# xor
 		assert bool(semitones is not None) != bool(name is not None), 'NoteInterval can not have both semitones and name set'
-		
+
 		if name is not None:
 			self.name = name 
 
 		elif semitones is not None:
-			assert semitones >= 0, 'Invalid NoteInterval'
+			# assert semitones >= 0, 'Invalid NoteInterval'
 			self._semitones = semitones
 
 	@property
 	def name(self):
 		if self._name is None:
-			self._name = self.INTERVAL_NAMES[self._semitones]
+			if self._semitones < 0:
+				direction = '(down)'
+			else:
+				direction = ''
+			self._name = f'{self.INTERVAL_NAMES[self._semitones]}{direction}'
 		return self._name 
 
 	@name.setter
@@ -195,6 +199,7 @@ class Note:
 	_full_name = None
 	_octave = None 
 	_absolute_value = None 
+	ABSOLUTE_VALUE_OF_A_440 = 57 
 
 	def __init__(self, name=None, octave=None, full_name=None, frequency=None, a_tuning=440, semitones_from_a=None, absolute_value=None):
 		self._a_tuning = a_tuning
@@ -202,9 +207,10 @@ class Note:
 		if name is not None:
 			assert octave is not None 
 			self._name = name.upper()
-			self._frequency = Note.name_to_frequency(
-				name=self._name,
-				a_tuning=self._a_tuning)
+			self._octave = octave
+			# self._frequency = Note.name_to_frequency(
+			# 	name=self._name,
+			# 	a_tuning=self._a_tuning)
 		# elif frequency is not None:
 		# 	self._frequency = frequency
 		# 	self._name = Note.frequency_to_name(
@@ -267,6 +273,24 @@ class Note:
 		# return f"< Note :: name:{self.full_name}  abs_value:{self.absolute_value} >"
 		return f"< Note :: name:{self.name}  octave:{self._octave} abs_value:{self.absolute_value} >"
 		return f"< Note :: name:{self.name}  freq:{self._frequency}  semitones_from_a:{self.semitones_from_a} >"
+
+	@property
+	def frequency(self):
+		if self._frequency is None:
+			# difference = Note(name='A', octave=4).absolute_value - self.absolute_value
+			difference = self.absolute_value - Note.ABSOLUTE_VALUE_OF_A_440 
+			print(f'diff:{difference}')
+			self._frequency = Note.frequency_at_semitone_away_from_target_frequency(
+				semitones=difference,
+				target_frequency=self._a_tuning
+			)
+		return self._frequency
+			 
+	@staticmethod
+	def frequency_at_semitone_away_from_target_frequency(semitones, target_frequency):
+		frequency = target_frequency * 2 ** (semitones / 12)
+		return frequency
+
 
 	@property
 	def absolute_value(self):
@@ -332,9 +356,9 @@ class Note:
 	"""
 	@staticmethod
 	def semitones_from_target_frequency(frequency, target_frequency):
-		#                     frequency = target_frequency * 2 ** (semitones / 12)
-		#  frequency / target_frequency = 2 ** (semitones / 12)
-		#  log_2 ( frequency / target_frequency )
+		#                               frequency = target_frequency * 2 ** (semitones / 12)
+		#            frequency / target_frequency = 2 ** (semitones / 12)
+		#  log_2 ( frequency / target_frequency ) = semitones
 
 		#  base ^ y = x    ==>    log x = y
 		base = 2
@@ -342,6 +366,12 @@ class Note:
 		semitones = 12 * math.log(x, base)
 		return semitones
 
+
+
+	"""
+
+	????????????????? what is this
+	"""
 	@staticmethod
 	def frequency_of_interval(semitones, target_frequency):
 		frequency = target_frequency * 2 ** (semitones / 12)
