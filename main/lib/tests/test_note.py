@@ -29,6 +29,16 @@ class TestNote:
 		assert n1.full_name == n2.full_name 
 		assert n1.absolute_value == n2.absolute_value 
 
+	def test_e_sharp(self):
+		testee = Note(name='E#', octave=3)
+		assert testee.name == 'F'
+		assert testee.octave == 3
+
+
+	def test_b_sharp(self):
+		testee = Note(name='B#', octave=3)
+		assert testee.name == 'C'
+		assert testee.octave == 4
 
 	def test_addition_does_not_work_for_adding_notes(self):
 		# A note can be added with an interval, but not another note.
@@ -66,7 +76,8 @@ class TestNote:
 
 		testee_3 = Note(name='A', octave=3)
 		assert testee_3.frequency == 220
-		
+
+
 class TestNoteInterval:
 
 	def test_note_interval_init(self):

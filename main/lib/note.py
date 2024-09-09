@@ -203,22 +203,15 @@ class Note:
 
 	def __init__(self, name=None, octave=None, full_name=None, frequency=None, a_tuning=440, semitones_from_a=None, absolute_value=None):
 		self._a_tuning = a_tuning
+		print('init note')
 
 		if name is not None:
 			assert octave is not None 
-			self._name = name.upper()
-			self._octave = octave
-			# self._frequency = Note.name_to_frequency(
-			# 	name=self._name,
-			# 	a_tuning=self._a_tuning)
-		# elif frequency is not None:
-		# 	self._frequency = frequency
-		# 	self._name = Note.frequency_to_name(
-		# 		frequency=self._frequency,
-		# 		a_tuning=self._a_tuning)
-		# elif semitones_from_a is not None:
-		# 	self._frequency = Note.frequency_of_interval(semitones=semitones_from_a, target_frequency=a_tuning)
-			
+			validated_name_and_octave = Note.validate_name_and_octave(name=name.upper(), octave=octave)
+			print(validated_name_and_octave)
+			self._name = validated_name_and_octave['name']
+			self._octave = validated_name_and_octave['octave']
+
 		elif full_name is not None:
 			name_and_octave = Note.full_name_to_name_and_octave(full_name)
 			self._name = name_and_octave['name']
@@ -230,8 +223,23 @@ class Note:
 			self._name = name_and_octave['name']
 			self._octave = name_and_octave['octave']			
 
+
+	@staticmethod
+	def validate_name_and_octave(name, octave):
+		print('validating')
+		new_octave = octave
+		try:
+			# Excessive...  just check that its there and return the right name
+			found_name = Note.NOTE_NAMES_2[Note.NOTE_NAMES_2.index(name)]
+		except ValueError:
+			if Note.NOTE_NAMES_2.index(name[0]) == len(Note.NOTE_NAMES_2) - 1:
+				new_octave = octave + 1 
+			found_name = Note.NOTE_NAMES_2[(Note.NOTE_NAMES_2.index(name[0]) + 1) % len(Note.NOTE_NAMES_2)]
+		return dict(name=found_name, octave=new_octave)
+
 	@staticmethod
 	def full_name_to_name_and_octave(full_name):
+		# Parse
 		if full_name[1] != '#':
 			name = full_name[0:1]
 			octave = int(full_name[1:])
@@ -241,6 +249,12 @@ class Note:
 		# Validate
 		assert name in Note.NOTE_NAMES_2
 		assert octave in list(range(0,8))
+
+		# VALIDATE ELSEWHERE???
+		validated_name_and_octave = Note.validate_name_and_octave(name=name.upper(), octave=octave)
+		name = validated_name_and_octave['name']
+		octave = validated_name_and_octave['octave']
+
 		return dict(name=name, octave=octave)
 
 
@@ -277,9 +291,7 @@ class Note:
 	@property
 	def frequency(self):
 		if self._frequency is None:
-			# difference = Note(name='A', octave=4).absolute_value - self.absolute_value
 			difference = self.absolute_value - Note.ABSOLUTE_VALUE_OF_A_440 
-			print(f'diff:{difference}')
 			self._frequency = Note.frequency_at_semitone_away_from_target_frequency(
 				semitones=difference,
 				target_frequency=self._a_tuning
@@ -295,6 +307,8 @@ class Note:
 	@property
 	def absolute_value(self):
 		if self._absolute_value is None:
+			print('self.name')
+			print(self.name)
 			name_semitones = Note.NOTE_NAMES_2.index(self.name)
 			octave_semitones = self.octave * 12
 			self._absolute_value = name_semitones + octave_semitones
@@ -326,6 +340,10 @@ class Note:
 			)
 		return self._name 
 
+	@property
+	def sharp(self):
+		return len(self.name) > 1 and self.name[1] == '#'
+
 	@name.setter 
 	def name(self, value):
 		assert False
@@ -340,7 +358,7 @@ class Note:
 
 	@property
 	def period_in_meters(self):
-		return 1 / self._frequency * self.SPEED_OF_SOUND_METER_PER_SECOND
+		return 1 / self.frequency * self.SPEED_OF_SOUND_METER_PER_SECOND
 
 
 	"""
