@@ -180,7 +180,11 @@ class Scale(object):
 		interval_recipe = relative_intervals[recipe_offset:] + relative_intervals[:recipe_offset]
 		print(f'interval_recipe {interval_recipe}')
 		
+		# This function is broken if it does not pass the assertion,
+		# ... meaning the program is wrong not the user.
+		assert sum(interval_recipe) == 12
 		return interval_recipe
+
 
 
 	@staticmethod

@@ -1,3 +1,5 @@
+
+
 import math
 
 class TimeInterval:
@@ -200,6 +202,8 @@ class Note:
 	_octave = None 
 	_absolute_value = None 
 	ABSOLUTE_VALUE_OF_A_440 = 69
+	MAX_OCTAVE = 9
+	MIN_OCTAVE = 0 # For now
 
 	def __init__(self, name=None, octave=None, full_name=None, frequency=None, a_tuning=440, semitones_from_a=None, absolute_value=None):
 		self._a_tuning = a_tuning
@@ -222,9 +226,24 @@ class Note:
 			self._name = name_and_octave['name']
 			self._octave = name_and_octave['octave']			
 
+	@staticmethod
+	def validate_name_and_octave(name: str, octave: int):
+		new_octave = Note.validate_octave(octave)
+
+		# Is this a sketchy way or a profound way?
+		# found_name, new_octave = Note.validate_name(name=name, octave=octave).value() 
+		#   - It's sketchy if the arguments returned are updated or come out wrong but still accepted when unpacking.
+		validated = Note.validate_name(name=name, octave=octave)
+		return dict(name=validated['name'], octave=validated['octave'])
 
 	@staticmethod
-	def validate_name_and_octave(name, octave):
+	def validate_octave(octave: int):
+		if octave < Note.MIN_OCTAVE and octave > Note.MAX_OCTAVE:
+			raise NoteError(f'octave must be between {Note.MIN_OCTAVE} and {Note.MAX_OCTAVE}')
+		return octave 
+
+	@staticmethod
+	def validate_name(name: str, octave: int=0):
 		new_octave = octave
 		try:
 			# Excessive...  just check that its there and return the right name
@@ -233,11 +252,18 @@ class Note:
 			if Note.NOTE_NAMES_2.index(name[0]) == len(Note.NOTE_NAMES_2) - 1:
 				new_octave = octave + 1 
 			try:
-				found_name = Note.NOTE_NAMES_2[(Note.NOTE_NAMES_2.index(name[0]) + 1) % len(Note.NOTE_NAMES_2)]
+				if name[1] == '#':
+					found_name = Note.NOTE_NAMES_2[(Note.NOTE_NAMES_2.index(name[0]) + 1) % len(Note.NOTE_NAMES_2)]
+				else:
+					raise NoteError(f'Invalid note name: {name}.  Invalid symbol found: {name[1:]}')
 			except ValueError:
 				raise NoteError(f'Invalid note name: {name}')
-
 		return dict(name=found_name, octave=new_octave)
+
+	@staticmethod
+	def full_name_to_name(full_name: str):
+		validated = Note.full_name_to_name_and_octave(full_name=full_name)
+		return validated['name']
 
 	@staticmethod
 	def full_name_to_name_and_octave(full_name):

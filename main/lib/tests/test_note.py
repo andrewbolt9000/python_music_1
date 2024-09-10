@@ -80,7 +80,12 @@ class TestNote:
 		testee_4 = Note(name='A', octave=8)
 		assert testee_4.frequency == 3520
 
+	def test_validate_name(self):
+		result = Note.validate_name(name='A', octave=0)
+		assert result == dict(name='A', octave=0)
 
+
+		
 class TestNoteInterval:
 
 	def test_note_interval_init(self):

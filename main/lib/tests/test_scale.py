@@ -5,7 +5,7 @@ from lib.note import Note, NoteInterval, NoteError
 from lib.scale import Scale, ScaleError
 
 
-class TestNote:
+class TestScale:
 
 	def test_basic_ionian(self):
 		testee = Scale(root_name='C', mode_name='ionian', scale_type='diatonic')		
@@ -64,3 +64,27 @@ class TestNote:
 	def test_note_names_to_interval_recipe(self):
 		result = Scale.note_names_to_interval_recipe(root_name='A', note_names=['A', 'B', 'C#', 'D', 'E', 'F#', 'G'])
 		assert result == [2, 2, 1, 2, 2, 1, 2]
+		assert sum(result) == 12
+
+	def test_note_names_to_interval_recipe_pentatonic(self):
+		result = Scale.note_names_to_interval_recipe(root_name='A', note_names=['A', 'C', 'D', 'E', 'G'])
+		assert result == [3, 2, 2, 3, 2]
+		assert sum(result) == 12
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -6,8 +6,8 @@
 import pygame
 
 from lib.note import Note, NoteInterval, NoteError
+from lib.scale import Scale
 from ui.midi_check import print_device_info, input_main
-
 
 # pygame setup
 pygame.init()
