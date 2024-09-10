@@ -60,3 +60,8 @@ class TestNote:
 		testee = Scale(root_name='A', mode_name='altered', scale_type='melodic minor')		
 		assert testee.interval_recipe == [1, 2, 1, 2, 2, 2, 2]
 		assert testee.note_names == ['A', 'A#', 'C', 'C#', 'D#', 'F', 'G']
+
+	def test_str(self):
+		testee = Scale(root_name='E', mode_name='phrygian', scale_type='diatonic')		
+		result = str(testee)
+		assert result == "Scale: E Phrygian [E, F, G, A, B, C, D]"

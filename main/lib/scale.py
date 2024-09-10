@@ -91,18 +91,19 @@ class Scale(object):
 		DIATONIC_TYPE: {
 			'mode_names': DIATONIC_MODE_NAMES,
 			'relative_intervals': DIATONIC_RECIPE_IONIAN,
-			'alternative_names': DIATONIC_MODE_ALTERNATIVE_NAMES,
+			'alternate_names': DIATONIC_MODE_ALTERNATIVE_NAMES,
 		},
 		MELODIC_MINOR_TYPE: {
 			'mode_names': MELODIC_MINOR_MODE_NAMES,
 			'relative_intervals': MELODIC_MINOR_RECIPE_AEOLIAN,
-			'alternative_names': MELODIC_MINOR_MODE_ALTERNATIVE_NAMES,
+			'alternate_names': MELODIC_MINOR_MODE_ALTERNATIVE_NAMES,
 		}		
 	}
 
 
 	_interval_recipe = None
 	_note_names = None
+	_alternate_name = None
 	def __init__(
 			self, 
 			root_name, 
@@ -121,12 +122,21 @@ class Scale(object):
 
 		print(self.note_names)
 
-	def __str__(self):
+	def __repr__(self):
 		if self.alternate_name is not None:
 			alternate_name = f' ({self.alternate_name.title()})'
 		else:
 			alternate_name = ''
 		return f'<Scale {self.root_name} {self.mode_name.title()}{alternate_name}>'
+
+
+	def __str__(self):
+		if self.alternate_name is not None:
+			alternate_name = f' ({self.alternate_name.title()})'
+		else:
+			alternate_name = ''
+		note_names = ', '.join(self.note_names)
+		return f'Scale: {self.root_name} {self.mode_name.title()}{alternate_name} [{note_names}]'
 
 	@property
 	def alternate_name(self):
