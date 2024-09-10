@@ -6,16 +6,29 @@
 import pygame
 
 from lib.note import Note, NoteInterval, NoteError
-
+from ui.midi_check import print_device_info, input_main
 
 
 # pygame setup
 pygame.init()
+
+# Fonts
 pygame.font.init()
 my_font = pygame.font.SysFont('Futura', 300)
 my_font_small = pygame.font.SysFont('Futura', 40)
+device_id = None
+print_device_info()
+# input_main()
+# exit()
 
-screen = pygame.display.set_mode((1280, 720))
+# if not pygame.midi.get_init():
+#     pygame.midi.init()
+
+
+
+
+
+screen = pygame.display.set_mode((800, 600))
 clock = pygame.time.Clock()
 running = True
 dt = 0
@@ -30,15 +43,65 @@ note = Note(name=note_name, octave=note_octave)
 
 keys_last = pygame.key.get_pressed()
 
+
+
+
+
+
+# MIDI Setup
+pygame.fastevent.init()
+event_get = pygame.fastevent.get
+event_post = pygame.fastevent.post
+
+pygame.midi.init()
+
+# _print_device_info()
+
+if device_id is None:
+    input_id = pygame.midi.get_default_input_id()
+else:
+    input_id = device_id
+
+print("using input_id :%s:" % input_id)
+i = pygame.midi.Input(input_id)
+
+# pygame.display.set_mode((1, 1))
+
+
+
+
+
 while running:
+
+
+    if i.poll():
+        midi_events = i.read(10)
+        # convert them into pygame events.
+        midi_evs = pygame.midi.midis2events(midi_events, i.device_id)
+        print('----------')
+        print(midi_events)
+        print(midi_evs)
+        for m_e in midi_evs:
+            event_post(m_e)
+
+
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+    for e in pygame.event.get():
+        if e.type == pygame.QUIT:
             running = False
+        if e.type in [pygame.midi.MIDIIN]:
+            print('printing e')
+            print(e)
+            if e.status == 156:
+                # Keydown
+                note = Note(absolute_value=e.data1)
+
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("gray")
+
+
 
 
 
@@ -96,7 +159,8 @@ while running:
         print(info)
         sharp_name_part = '#' if note_sharp else ''
         # print(f'{note_name}{sharp_name_part}')
-        note = Note(name=f'{note_name}{sharp_name_part}', octave=note_octave)
+        
+        #note = Note(name=f'{note_name}{sharp_name_part}', octave=note_octave) #################################
 
 
     note_name_surface = my_font.render(f'{note.full_name}', True, (0, 0, 0))
@@ -106,11 +170,11 @@ while running:
     info_text_x = 40
     info_text_y = 440
     info_text_spacing = 50
-    info_text = f"Frequency: {round(note.frequency, 2)}"
+    info_text = f"Frequency: {round(note.frequency, 2)} Hz"
     note_info_surface = my_font_small.render(f'{info_text}', True, (0, 0, 0))
     screen.blit(note_info_surface, (info_text_x, info_text_y))
 
-    info_text = f"Distance: {round(note.period_in_meters, 2)}m"
+    info_text = f"Wavelength: {round(note.period_in_meters, 2)} m"
     note_info_surface = my_font_small.render(f'{info_text}', True, (0, 0, 0))
     screen.blit(note_info_surface, (info_text_x, info_text_y + 1 * info_text_spacing))
 
@@ -140,6 +204,11 @@ while running:
     keys_last = keys
 
 pygame.quit()
+
+
+# Midi cleanup
+del i
+pygame.midi.quit()
 
 
 
