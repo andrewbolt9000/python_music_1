@@ -83,6 +83,11 @@ class TestGuitar:
 		assert testee == [['O', 'O', '-', 'O', '-', 'O', '-'], ['-', 'O', 'O', '-', 'O', '-', 'O']]
 		
 
+	def test_print_readable_basic(self):
+		scale = Scale(root_name='A', mode_name='aeolian')
+		testee = Guitar(tuning='standard', scale=scale)
+		result = testee.print_readable_basic(return_string=True)
+		assert result == '1 - (E5)  O-O---O---O---O-O---O---O-O---O---O---O-O---O--\n2 - (B5)  O-O---O---O-O---O---O---O-O---O---O-O---O---O--\n3 - (G4)  O---O---O-O---O---O-O---O---O---O-O---O---O-O--\n4 - (D4)  O---O-O---O---O---O-O---O---O-O---O---O---O-O--\n5 - (A4)  O---O-O---O---O-O---O---O---O-O---O---O-O---O--\n6 - (E3)  O-O---O---O---O-O---O---O-O---O---O---O-O---O--\n'
 
 
 

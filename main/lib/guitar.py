@@ -40,7 +40,7 @@ class NamelessRepresentation:
 
 def GuitarRepresentationFactory(representation_type):
 	representations = {
-		"note": NoteRepresentation,
+		"note_object": NoteRepresentation,
 		"full_name": FullNameRepresentation,
 		"basic_name": BasicNameRepresentation,
 		"nameless": NamelessRepresentation,
@@ -66,6 +66,14 @@ class Guitar:
 		assert tuning in Guitar.TUNING_DEFINITIONS.keys()
 		self._string_tunings = Guitar.TUNING_DEFINITIONS[tuning]
 		self._scale = scale
+
+		self._scaled_filtered_fretboard = Guitar.tuning_and_scale_to_fretboard(
+			string_tunings=self._string_tunings,
+			scale=self._scale, 
+			max_fret=self._max_fret,
+			representation_type='note_object',
+		) 
+
 
 	@staticmethod 
 	def build_empty_fretboard(string_tunings: List[str], max_fret: int) -> List[List[int]]:
@@ -179,8 +187,31 @@ class Guitar:
 			
 		return fretboard
 				
+	@staticmethod
+	def string_number_human_readable(computer_number: int, total_strings: int=6):
+		return total_strings - computer_number
 
+	def print_readable_basic(self, return_string=False):
+		scaled_filtered_fretboard = Guitar.tuning_and_scale_to_fretboard(
+			string_tunings=self._string_tunings,
+			scale=self._scale, 
+			max_fret=self._max_fret,
+			representation_type='nameless',
+		)
+		readable = ''
+		for string_number in reversed(range(0, len(scaled_filtered_fretboard))):
+			human_string_number = Guitar.string_number_human_readable(
+				computer_number=string_number,
+				total_strings=len(scaled_filtered_fretboard))
+			readable = readable + f'{human_string_number} - ({self._string_tunings[string_number]})  '
+			readable = readable + '-'.join(scaled_filtered_fretboard[string_number])
+			readable = readable + '\n'
+			# for fret in range(0, len(scaled_filtered_fretboard[0])):
+			# 	readable = readable + f'{scaled_filtered_fretboard[string_number][]}'
 
+		if return_string:
+			return readable
+		print(readable)
 
 	def print_fretboard(self, note):
 		print(note)
