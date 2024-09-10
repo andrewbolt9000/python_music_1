@@ -234,7 +234,11 @@ class Note:
 		except ValueError:
 			if Note.NOTE_NAMES_2.index(name[0]) == len(Note.NOTE_NAMES_2) - 1:
 				new_octave = octave + 1 
-			found_name = Note.NOTE_NAMES_2[(Note.NOTE_NAMES_2.index(name[0]) + 1) % len(Note.NOTE_NAMES_2)]
+			try:
+				found_name = Note.NOTE_NAMES_2[(Note.NOTE_NAMES_2.index(name[0]) + 1) % len(Note.NOTE_NAMES_2)]
+			except ValueError:
+				raise NoteError(f'Invalid note name: {name}')
+
 		return dict(name=found_name, octave=new_octave)
 
 	@staticmethod

@@ -15,7 +15,7 @@ pygame.init()
 # Fonts
 pygame.font.init()
 my_font = pygame.font.SysFont('Futura', 300)
-my_font_small = pygame.font.SysFont('Futura', 40)
+my_font_small = pygame.font.SysFont('Futura', 30)
 device_id = None
 print_device_info()
 # input_main()
@@ -169,14 +169,25 @@ while running:
 
     info_text_x = 40
     info_text_y = 440
-    info_text_spacing = 50
+    info_text_spacing = 40
     info_text = f"Frequency: {round(note.frequency, 2)} Hz"
     note_info_surface = my_font_small.render(f'{info_text}', True, (0, 0, 0))
     screen.blit(note_info_surface, (info_text_x, info_text_y))
 
     info_text = f"Wavelength: {round(note.period_in_meters, 2)} m"
     note_info_surface = my_font_small.render(f'{info_text}', True, (0, 0, 0))
-    screen.blit(note_info_surface, (info_text_x, info_text_y + 1 * info_text_spacing))
+    screen.blit(note_info_surface, (info_text_x, info_text_y + (1 * info_text_spacing)))
+
+    pygames_answer = pygame.midi.midi_to_frequency(note.absolute_value)
+    info_text = f"PG Freq: {round(pygames_answer, 2)} m"
+    note_info_surface = my_font_small.render(f'{info_text}', True, (0, 0, 0))
+    screen.blit(note_info_surface, (info_text_x, info_text_y + (2 * info_text_spacing)))
+
+    info_text = f"abs_val: {round(note.absolute_value, 2)} m"
+    note_info_surface = my_font_small.render(f'{info_text}', True, (0, 0, 0))
+    screen.blit(note_info_surface, (info_text_x, info_text_y + (3 * info_text_spacing)))
+
+    
 
 
     # text_surface = my_font.render('Some Text', True, (0, 0, 0))
