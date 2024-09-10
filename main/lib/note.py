@@ -199,7 +199,7 @@ class Note:
 	_full_name = None
 	_octave = None 
 	_absolute_value = None 
-	ABSOLUTE_VALUE_OF_A_440 = 57 
+	ABSOLUTE_VALUE_OF_A_440 = 69
 
 	def __init__(self, name=None, octave=None, full_name=None, frequency=None, a_tuning=440, semitones_from_a=None, absolute_value=None):
 		self._a_tuning = a_tuning
@@ -208,7 +208,6 @@ class Note:
 		if name is not None:
 			assert octave is not None 
 			validated_name_and_octave = Note.validate_name_and_octave(name=name.upper(), octave=octave)
-			print(validated_name_and_octave)
 			self._name = validated_name_and_octave['name']
 			self._octave = validated_name_and_octave['octave']
 
@@ -226,7 +225,6 @@ class Note:
 
 	@staticmethod
 	def validate_name_and_octave(name, octave):
-		print('validating')
 		new_octave = octave
 		try:
 			# Excessive...  just check that its there and return the right name
@@ -311,8 +309,6 @@ class Note:
 	@property
 	def absolute_value(self):
 		if self._absolute_value is None:
-			print('self.name')
-			print(self.name)
 			name_semitones = Note.NOTE_NAMES_2.index(self.name)
 			octave_semitones = self.octave * 12
 			self._absolute_value = name_semitones + octave_semitones
@@ -416,7 +412,6 @@ class Note:
 			frequency=frequency,
 			target_frequency=a_tuning
 		)
-		print(semitones_from_a)
 		a_index = 0
 		return Note.NOTE_NAMES[math.floor(( a_index + semitones_from_a ) % 12)]
 		# exit()

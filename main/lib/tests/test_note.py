@@ -68,14 +68,17 @@ class TestNote:
 			assert 'For now.........' in str(excinfo.value)
 
 	def test_frequency(self):
-		testee_1 = Note(name='A', octave=5)
+		testee_1 = Note(name='A', octave=6)
 		assert testee_1.frequency == 880
 
-		testee_2 = Note(name='A', octave=4)
+		testee_2 = Note(name='A', octave=5)
 		assert testee_2.frequency == 440
 
-		testee_3 = Note(name='A', octave=3)
+		testee_3 = Note(name='A', octave=4)
 		assert testee_3.frequency == 220
+
+		testee_4 = Note(name='A', octave=8)
+		assert testee_4.frequency == 3520
 
 
 class TestNoteInterval:

@@ -14,7 +14,7 @@ pygame.init()
 
 # Fonts
 pygame.font.init()
-my_font = pygame.font.SysFont('Futura', 300)
+my_font = pygame.font.SysFont('Futura', 200)
 my_font_small = pygame.font.SysFont('Futura', 30)
 device_id = None
 print_device_info()
@@ -78,9 +78,9 @@ while running:
         midi_events = i.read(10)
         # convert them into pygame events.
         midi_evs = pygame.midi.midis2events(midi_events, i.device_id)
-        print('----------')
-        print(midi_events)
-        print(midi_evs)
+        # print('----------')
+        # print(midi_events)
+        # print(midi_evs)
         for m_e in midi_evs:
             event_post(m_e)
 
@@ -91,8 +91,8 @@ while running:
         if e.type == pygame.QUIT:
             running = False
         if e.type in [pygame.midi.MIDIIN]:
-            print('printing e')
-            print(e)
+            # print('printing e')
+            # print(e)
             if e.status == 156:
                 # Keydown
                 note = Note(absolute_value=e.data1)
@@ -156,7 +156,7 @@ while running:
             {note.octave} != {note_octave} or 
             {note.sharp} != {note_sharp}
         """
-        print(info)
+        # print(info)
         sharp_name_part = '#' if note_sharp else ''
         # print(f'{note_name}{sharp_name_part}')
         
@@ -164,11 +164,11 @@ while running:
 
 
     note_name_surface = my_font.render(f'{note.full_name}', True, (0, 0, 0))
-    screen.blit(note_name_surface, (40,40))
+    screen.blit(note_name_surface, (20,20))
 
 
-    info_text_x = 40
-    info_text_y = 440
+    info_text_x = 20
+    info_text_y = 240
     info_text_spacing = 40
     info_text = f"Frequency: {round(note.frequency, 2)} Hz"
     note_info_surface = my_font_small.render(f'{info_text}', True, (0, 0, 0))
@@ -179,11 +179,11 @@ while running:
     screen.blit(note_info_surface, (info_text_x, info_text_y + (1 * info_text_spacing)))
 
     pygames_answer = pygame.midi.midi_to_frequency(note.absolute_value)
-    info_text = f"PG Freq: {round(pygames_answer, 2)} m"
+    info_text = f"PG Freq: {round(pygames_answer, 2)} Hz"
     note_info_surface = my_font_small.render(f'{info_text}', True, (0, 0, 0))
     screen.blit(note_info_surface, (info_text_x, info_text_y + (2 * info_text_spacing)))
 
-    info_text = f"abs_val: {round(note.absolute_value, 2)} m"
+    info_text = f"abs_val: {round(note.absolute_value, 2)}"
     note_info_surface = my_font_small.render(f'{info_text}', True, (0, 0, 0))
     screen.blit(note_info_surface, (info_text_x, info_text_y + (3 * info_text_spacing)))
 

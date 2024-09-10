@@ -183,13 +183,38 @@ class Scale(object):
 		return interval_recipe
 
 
+	@staticmethod
+	def note_names_to_interval_recipe(root_name, note_names):
+		root_note = Note(name=root_name, octave=0)
+
+		# measure all note intervals from root
+		intervals_relative_to_root = []
+		for note_name in note_names:
+			note = Note(name=note_name, octave=1)
+			interval = note - root_note
+			if interval.semitones % 12 != 0:
+				intervals_relative_to_root.append(interval.semitones % 12)
+
+		intervals_relative_to_root = list(set(intervals_relative_to_root))
+		intervals_relative_to_root.sort()
+		last_interval = 0
+		interval_recipe = []
+		for relative_interval in intervals_relative_to_root:
+			delta = relative_interval - last_interval
+			last_interval = relative_interval
+			interval_recipe.append(delta)
+		interval_recipe.append(12 - last_interval)
+		return interval_recipe
+
+
 	# @staticmethod
-	# def notes_to_scale_definition(root_note, notes):
+	# def notes_to_interval_recipe(root_note, notes):
 	# 	# measure all note intervals from root
-	# 	intervals = []
+	# 	intervals_relative_to_root = []
 	# 	for note in notes:
 	# 		interval = note - root_note
-	# 		intervals.add(interval.semitones % 12)
+	# 		intervals_relative_to_root.add(interval.semitones % 12)
+
 
 	# 	# analyse intervals 
 	# 	intervals = list(set(intervals))
@@ -204,7 +229,7 @@ class Scale(object):
 
 
 
-	# def notes_to_scale(notes):
-	# 	self._root = None 
+	def notes_to_scale(notes):
+		self._root = None 
 
 
