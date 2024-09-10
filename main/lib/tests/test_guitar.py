@@ -4,6 +4,7 @@ import pytest
 
 from lib.guitar import Guitar 
 from lib.scale import Scale
+from lib.note import Note
 
 
 
@@ -30,17 +31,57 @@ class TestGuitar:
 
 
 
-
-	def test_tuning_and_scale_to_fretboard_of_notes(self):
+	def test_tuning_to_fretboard_of_all_notes(self):
 		test_scale = Scale(root_name='E', mode_name='phrygian', scale_type='diatonic')
-		test_tuning = ['E3', 'A4']
-		testee = Guitar.tuning_and_scale_to_fretboard_of_notes(
+		test_tuning = ['E3', 'A#4']
+		result = Guitar.tuning_to_fretboard_of_all_notes(
+			string_tunings=test_tuning, 
+			max_fret=3
+		)
+		# !!! TODO: Mock Note creation
+		# assert result == [
+		# 	[Note(full_name='E3'), Note(full_name='F3'), Note(full_name='F#3')], 
+		# 	[Note(full_name='A#4'), Note(full_name='B4'), Note(full_name='C5')]
+		# ]
+
+
+
+
+	def test_tuning_and_scale_to_fretboard_of_full_names(self):
+		test_scale = Scale(root_name='E', mode_name='phrygian', scale_type='diatonic')
+		test_tuning = ['E3', 'A#4']
+		testee = Guitar.tuning_and_scale_to_fretboard(
 			string_tunings=test_tuning, 
 			scale=test_scale, 
-			max_fret=7
+			max_fret=7,
+			representation_type='full_name'
 		)
-		print(testee)
-		assert False
+		assert testee == [['E3', 'F3', 0, 'G3', 0, 'A3', 0], [0, 'B4', 'C5', 0, 'D5', 0, 'E5']]
+
+
+	def test_tuning_and_scale_to_fretboard_of_basic_names(self):
+		test_scale = Scale(root_name='E', mode_name='phrygian', scale_type='diatonic')
+		test_tuning = ['E3', 'A#4']
+		testee = Guitar.tuning_and_scale_to_fretboard(
+			string_tunings=test_tuning, 
+			scale=test_scale, 
+			max_fret=7,
+			representation_type='basic_name'
+		)
+		assert testee == [['E', 'F', None, 'G', None, 'A', None], [None, 'B', 'C', None, 'D', None, 'E']]
+		
+
+	def test_tuning_and_scale_to_fretboard_of_nameless(self):
+		test_scale = Scale(root_name='E', mode_name='phrygian', scale_type='diatonic')
+		test_tuning = ['E3', 'A#4']
+		testee = Guitar.tuning_and_scale_to_fretboard(
+			string_tunings=test_tuning, 
+			scale=test_scale, 
+			max_fret=7,
+			representation_type='nameless'
+		)
+		assert testee == [['O', 'O', '-', 'O', '-', 'O', '-'], ['-', 'O', 'O', '-', 'O', '-', 'O']]
+		
 
 
 

@@ -311,8 +311,19 @@ class Note:
 
 
 
+
+
+	def __str__(self):
+		# return f"< Note :: name:{self.full_name}  abs_value:{self.absolute_value} >"
+		
+		return f"{self.full_name}"
+		return f"< Note :: name:{self.name}  freq:{self._frequency}  semitones_from_a:{self.semitones_from_a} >"
+
 	def __repr__(self):
 		# return f"< Note :: name:{self.full_name}  abs_value:{self.absolute_value} >"
+		return f"Note(full_name='{self.full_name}')"
+		return f"{self.full_name}"
+		return f"Note(name={self.name}, octave={self._octave})"
 		return f"< Note :: name:{self.name}  octave:{self._octave} abs_value:{self.absolute_value} >"
 		return f"< Note :: name:{self.name}  freq:{self._frequency}  semitones_from_a:{self.semitones_from_a} >"
 

@@ -2,5 +2,5 @@
 
 pushd main
 export PYTHONPATH=$PYTHONPATH:.
-pytest
+pytest -vv
 popd
