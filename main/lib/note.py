@@ -207,7 +207,6 @@ class Note:
 
 	def __init__(self, name=None, octave=None, full_name=None, frequency=None, a_tuning=440, semitones_from_a=None, absolute_value=None):
 		self._a_tuning = a_tuning
-		print('init note')
 
 		if name is not None:
 			assert octave is not None 

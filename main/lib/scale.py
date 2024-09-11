@@ -110,7 +110,7 @@ class Scale(object):
 			mode_name,
 			scale_type=DIATONIC_TYPE,
 		):
-		print(Scale.SCALE_DEFINITIONS)
+		# print(Scale.SCALE_DEFINITIONS)
 		validated_name = Note.validate_name_and_octave(root_name, 0)
 		self.root_name = validated_name['name']
 
@@ -120,7 +120,7 @@ class Scale(object):
 		assert mode_name.lower() in Scale.SCALE_DEFINITIONS[self.scale_type]['mode_names']
 		self.mode_name = mode_name.lower()
 
-		print(self.note_names)
+		# print(self.note_names)
 
 	def __repr__(self):
 		if self.alternate_name is not None:
@@ -174,11 +174,11 @@ class Scale(object):
 		# Here's where some magic happens
 		scale_definition = Scale.SCALE_DEFINITIONS[scale_type]
 		recipe_offset = scale_definition['mode_names'].index(mode_name)
-		print(f'recipe offset {recipe_offset}')
+		# print(f'recipe offset {recipe_offset}')
 
 		relative_intervals = scale_definition['relative_intervals']
 		interval_recipe = relative_intervals[recipe_offset:] + relative_intervals[:recipe_offset]
-		print(f'interval_recipe {interval_recipe}')
+		# print(f'interval_recipe {interval_recipe}')
 		
 		# This function is broken if it does not pass the assertion,
 		# ... meaning the program is wrong not the user.
