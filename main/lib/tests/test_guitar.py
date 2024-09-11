@@ -24,13 +24,6 @@ class TestGuitar:
 		]
 
 
-
-
-
-
-
-
-
 	def test_tuning_to_fretboard_of_all_notes(self):
 		test_scale = Scale(root_name='E', mode_name='phrygian', scale_type='diatonic')
 		test_tuning = ['E3', 'A#4']
