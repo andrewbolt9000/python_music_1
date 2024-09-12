@@ -1,5 +1,6 @@
 
-from lib.guitar import Guitar, GUITAR_REPRESENTATIONS
+from lib.guitar import Guitar
+from lib.guitar_representation import GUITAR_REPRESENTATIONS
 from lib.scale import Scale
 from lib.note import Note
 
