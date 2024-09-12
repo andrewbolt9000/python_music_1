@@ -5,7 +5,8 @@ import npyscreen
 from typing import List
 
 
-from lib.guitar import Guitar, GUITAR_REPRESENTATIONS
+from lib.guitar import Guitar
+from lib.guitar_representation import GUITAR_REPRESENTATIONS
 from lib.note import Note, NoteInterval
 from lib.scale import Scale
 
@@ -233,7 +234,7 @@ class UltraCoolTheme(npyscreen.ThemeManager):
 	'CURSOR_INVERSE': 'BLACK_WHITE',
 	'LABEL'       : 'CYAN_BLACK',
 	'LABELBOLD'   : 'BLACK_CYAN',
-	'CONTROL'     : 'BLUE_BLACK',
+	'CONTROL'     : 'RED_BLACK',
 	'IMPORTANT'   : 'GREEN_BLACK',
 	'SAFE'        : 'GREEN_BLACK',
 	'WARNING'     : 'YELLOW_BLACK',

@@ -10,17 +10,20 @@ class Guitar:
 	
 	STANDARD = 'Standard'
 	DROP_D = 'Drop D'
-	A_SPECIAL = 'A\'s Special' 
-	FIFTHS = 'Fifths' 
+	A_SPECIAL = 'Andre Special' 
+	FRIPP = 'New Standard' 
 	BOUZOUKI = 'Bouzouki'
 	SEVEN_STR = '7 String'
 	TUNING_DEFINITIONS = {
-		STANDARD 	: ['E3', 'A4', 'D4', 'G4', 'B5', 'E5'],
-		DROP_D   	: ['D3', 'A4', 'D4', 'G4', 'B5', 'E5'],
-		A_SPECIAL  	: ['C3', 'G4', 'D4', 'G4', 'B5', 'E5'],
-		SEVEN_STR   : ['B3', 'E3', 'A4', 'D4', 'G4', 'B5', 'E5'],
-		FIFTHS  	: ['C3', 'G4', 'D4', 'A4', 'E5', 'B6'],
-		BOUZOUKI   	: ['D3', 'A4', 'E4', 'B4'],
+
+ 
+
+		STANDARD 	: ['E2', 'A2', 'D3', 'G3', 'B3', 'E4'],
+		DROP_D   	: ['D2', 'A2', 'D3', 'G3', 'B3', 'E4'],
+		A_SPECIAL  	: ['C2', 'G2', 'D3', 'G3', 'B3', 'E4'],
+		SEVEN_STR   : ['B2', 'E2', 'A2', 'D3', 'G3', 'B3', 'E4'],
+		FRIPP   	: ['C2', 'G2', 'D3', 'A3', 'E4', 'G4'],
+		BOUZOUKI   	: ['D2', 'A2', 'E3', 'B3'],
 	}
 
 
