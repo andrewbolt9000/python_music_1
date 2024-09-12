@@ -15,9 +15,6 @@ class Guitar:
 	BOUZOUKI = 'Bouzouki'
 	SEVEN_STR = '7 String'
 	TUNING_DEFINITIONS = {
-
- 
-
 		STANDARD 	: ['E2', 'A2', 'D3', 'G3', 'B3', 'E4'],
 		DROP_D   	: ['D2', 'A2', 'D3', 'G3', 'B3', 'E4'],
 		A_SPECIAL  	: ['C2', 'G2', 'D3', 'G3', 'B3', 'E4'],
