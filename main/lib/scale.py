@@ -18,32 +18,32 @@ class Scale(object):
 	# Other modes derived from this
 	DIATONIC_RECIPE_IONIAN = [
 		2,
+		1,
+		2,
 		2,
 		1,
 		2,
 		2,
-		2,
-		1,
 	]
 
 	# Order here is used to generate recipe
 	DIATONIC_MODE_NAMES = [
+		'aeolian',
+		'locrean',
 		'ionian',
 		'dorian',
 		'phrygian',
 		'lydian',
 		'mixolydian',
-		'aeolian',
-		'locrean',
 	]
 
 	DIATONIC_MODE_ALTERNATIVE_NAMES = [
+		'minor',
+		None,
 		'major',
 		None,
 		None,
 		None,
-		None,
-		'minor',
 		None,
 	]
 

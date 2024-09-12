@@ -128,7 +128,7 @@ class MainForm(npyscreen.Form):
 			max_height=8, 
 			max_width=30,
 			name='Mode', 
-			value=5,
+			value=0,
 			values=scale_modes,
 			# relx=int(x/2),
 			begin_entry_at=begin_entry_at,
@@ -213,7 +213,7 @@ class MainForm(npyscreen.Form):
 			values=[],
 			max_height=10,
 			rely=18,
-			relx=1,
+			relx=2,
 			# field_width=80,
 			# use_two_lines=True,
 		)
@@ -227,7 +227,7 @@ class MainForm(npyscreen.Form):
 class UltraCoolTheme(npyscreen.ThemeManager):
 	default_colors = {
 	'DEFAULT'     : 'WHITE_BLACK',
-	'FORMDEFAULT' : 'RED_BLACK',
+	'FORMDEFAULT' : 'WHITE_BLACK',
 	'NO_EDIT'     : 'BLUE_BLACK',
 	'STANDOUT'    : 'CYAN_BLACK',
 	'CURSOR'      : 'CYAN_BLACK',
@@ -280,7 +280,8 @@ class App(npyscreen.NPSAppManaged):
 			# minimum_lines=20,
 			lines=30,
 			minimum_columns=50,
-			columns=90,
+			columns=120,
+			# columns=90,
 			# max_width=100,
 		)
 
