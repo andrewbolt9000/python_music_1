@@ -4,42 +4,58 @@ from typing import List
 from lib.note import Note, NoteInterval
 from lib.scale import Scale
 
-
-class NoteRepresentation:
+class RepresentationInterface:
 	def found(self, full_name, degree=None):
-		return Note(full_name=full_name)
-
-	def not_found(self, full_name=None, degree=None):
-		return None 
-
-	def spacing(self, full_name=None, degree=None):
-		return '-'
-
-
-class FullNameRepresentation:
-	def found(self, full_name, degree=None):
-		return full_name
-
-	def not_found(self, full_name=None, degree=None):
-		return 0
-
-	def spacing(self, full_name=None, degree=None):
-		return '-'
-
-
-class BasicNameRepresentation:
-	def found(self, full_name, degree=None):
-		return Note.full_name_to_name(full_name=full_name)
+		return None
 
 	def not_found(self, full_name=None, degree=None):
 		return None
 
 	def spacing(self, full_name=None, degree=None):
+		return None
+
+	def guide(self):
+		# default_guide = f'String  |_|_|_3_|_5_|_7_|_9_|_|_12|_|_15|_17|_19|_21|_|_24'		
+		# default_guide = f'String  | | | 3 | 5 | 7 | 9 | | 12| | 15| 17| 19| 21| | 24'		
+		default_guide = f'String        3   5   7   9     12    15  17  19  21    24'		
+		return default_guide
+
+
+class NoteRepresentation(RepresentationInterface):
+	def found(self, full_name, degree=None):
+		return Note(full_name=full_name)
+
+	def not_found(self, full_name=None, degree=None):
+		return ' ' 
+
+	def spacing(self, full_name=None, degree=None):
+		return '-'
+
+
+class FullNameRepresentation(RepresentationInterface):
+	def found(self, full_name, degree=None):
+		return full_name
+
+	def not_found(self, full_name=None, degree=None):
+		return '0'
+
+	def spacing(self, full_name=None, degree=None):
+		return '-'
+
+
+class BasicNameRepresentation(RepresentationInterface):
+	def found(self, full_name, degree=None):
+		return Note.full_name_to_name(full_name=full_name)
+
+	def not_found(self, full_name=None, degree=None):
+		return ' '
+
+	def spacing(self, full_name=None, degree=None):
 		return '-'
 
 
 
-class NamelessRepresentation:
+class NamelessRepresentation(RepresentationInterface):
 	def found(self, full_name, degree=None):
 		return 'O'
 
@@ -50,7 +66,7 @@ class NamelessRepresentation:
 		return '-'
 
 
-class EmojiRepresentation:
+class EmojiRepresentation(RepresentationInterface):
 	def found(self, full_name, degree=None):
 		return '●'
 
@@ -60,7 +76,7 @@ class EmojiRepresentation:
 	def spacing(self, full_name=None, degree=None):
 		return '┼'
 
-class ScaleDegreeRepresentation:
+class ScaleDegreeRepresentation(RepresentationInterface):
 	def found(self, full_name, degree=None):
 		return f'{degree}'
 
@@ -70,17 +86,31 @@ class ScaleDegreeRepresentation:
 	def spacing(self, full_name=None, degree=None):
 		return '-'
 
-
-class DegreeEmojiRepresentation:
+class ScaleDegreeDebugRepresentation(RepresentationInterface):
 	def found(self, full_name, degree=None):
-		if degree == 0:
-			return '◉'
-		elif degree == 3:
-			return '◎'
-		elif degree == 5:
-			return '⦿'
-		else:
+		if degree == 1:
+			return 'R'
+		return f'{degree}'
+
+	def not_found(self, full_name=None, degree=None):
+		return ' '
+
+	def spacing(self, full_name=None, degree=None):
+		return ' '
+
+	def guide(self):
+		return f' String{self.spacing()}|     3   5   7   9     12    15  17  19  21    24'		
+
+class DegreeEmojiRepresentation(RepresentationInterface):
+	def found(self, full_name, degree=None):
+		if degree == 1:
 			return '●'
+		elif degree == 3:
+			return '⦿'
+		elif degree == 5:
+			return '◉'
+		else:
+			return '◎'
 
 	def not_found(self, full_name=None, degree=None):
 		return '┼'
@@ -89,14 +119,14 @@ class DegreeEmojiRepresentation:
 		return '⎯'
 
 
-class ColorDegreeEmojiRepresentation:
+class ColorDegreeEmojiRepresentation(RepresentationInterface):
 	def found(self, full_name, degree=None):
-		if degree == 0:
+		if degree == 1:
 			return '●'
-		# elif degree == 3:
-		# 	return '🟢'
-		# elif degree == 5:
-		# 	return '🟢'
+		elif degree == 3:
+			return '3'
+		elif degree == 5:
+			return '5'
 		else:
 			return '⦿'			
 			# return '●'
@@ -107,21 +137,40 @@ class ColorDegreeEmojiRepresentation:
 	def spacing(self, full_name=None, degree=None):
 		return '⎯'
 
+class SpacedDegreeEmojiRepresentation(RepresentationInterface):
+	def found(self, full_name, degree=None):
+		if degree == 1:
+			return '●'
+		else:
+			return '⦿'			
+			# return '●'
+
+	def not_found(self, full_name=None, degree=None):
+		return '┼'
+
+	def spacing(self, full_name=None, degree=None):
+		return '⎯⎯'
+
+	def guide(self):
+		return f' String |        3     5     7     9        12       15    17    19    21       24'		
 
 
 
+
+GUITAR_REPRESENTATIONS = {
+	"note_object":			NoteRepresentation,
+	"full_name":			FullNameRepresentation,
+	"basic_name":			BasicNameRepresentation,
+	"nameless":				NamelessRepresentation,
+	# "emoji":				EmojiRepresentation,
+	"degree":				ScaleDegreeRepresentation,
+	# "degree_emoji":		DegreeEmojiRepresentation,
+	# "color_degree_emoji":	ColorDegreeEmojiRepresentation,
+	"extra_spacing":		SpacedDegreeEmojiRepresentation,
+	"degree_debug":			ScaleDegreeDebugRepresentation,
+}
 def GuitarRepresentationFactory(representation_type):
-	representations = {
-		"note_object": NoteRepresentation,
-		"full_name": FullNameRepresentation,
-		"basic_name": BasicNameRepresentation,
-		"nameless": NamelessRepresentation,
-		"emoji": EmojiRepresentation,
-		"degree": ScaleDegreeRepresentation,
-		"degree_emoji": DegreeEmojiRepresentation,
-		"color_degree_emoji": ColorDegreeEmojiRepresentation,
-	}
-	return representations[representation_type]()
+	return GUITAR_REPRESENTATIONS[representation_type]()
 
 class Guitar:
 	
@@ -147,7 +196,7 @@ class Guitar:
 			string_tunings=self._string_tunings,
 			scale=self._scale, 
 			max_fret=self._max_fret,
-			representation_type='note_object',
+			representation_type='degree_debug',
 		) 
 
 
@@ -204,7 +253,7 @@ class Guitar:
 			for fret in range(0, max_fret):
 				fret_note = string_note + NoteInterval(fret)
 				if fret_note.name in scale.note_names:
-					degree = scale.note_names.index(fret_note.name)
+					degree = scale.note_names.index(fret_note.name) + 1
 					fretboard[string_number].append(representation.found(full_name=fret_note.full_name, degree=degree))
 				else:
 					fretboard[string_number].append(representation.not_found(full_name=fret_note.full_name))
@@ -268,8 +317,18 @@ class Guitar:
 	def string_number_human_readable(computer_number: int, total_strings: int=6):
 		return total_strings - computer_number
 
-	def print_readable_basic(self, return_string=False, lines_to_list=False, representation_type='emoji'):
-		representation = GuitarRepresentationFactory(representation_type)
+	def print_readable_basic(
+			self, 
+			max_fret=None, 
+			return_string=True, 
+			lines_to_list=False, 
+			representation_type='degree_debug', 
+			representation=None,
+			top_guide=True,
+	):
+		readable_max_fret = max_fret if max_fret is None else self._max_fret
+		if representation is None:
+			representation = GuitarRepresentationFactory(representation_type)
 		scaled_filtered_fretboard = Guitar.tuning_and_scale_to_fretboard(
 			string_tunings=self._string_tunings,
 			scale=self._scale, 
@@ -279,20 +338,24 @@ class Guitar:
 
 		readable = []
 
-		# Fret number guide
-		guide_line = f'String    {representation.spacing()}|     3   5   7   9     12    15  17  19  21    24'
-		readable.append(guide_line)
+		if top_guide:
+			# Fret number guide
+			readable.append(representation.guide())
 
 		for string_number in reversed(range(0, len(scaled_filtered_fretboard))):
+			# Normalize
+			scaled_filtered_fretboard[string_number] = [str(e) for e in scaled_filtered_fretboard[string_number]]
+			
 			readable_line = ''
 			human_string_number = Guitar.string_number_human_readable(
 				computer_number=string_number,
 				total_strings=len(scaled_filtered_fretboard))
-			readable_line = readable_line + f'{human_string_number} - ({self._string_tunings[string_number]})  '
-			readable_line = readable_line + f'{scaled_filtered_fretboard[string_number][0]}|-' 
+
+			readable_line = readable_line + f'{human_string_number} ({self._string_tunings[string_number]}) '
+			readable_line = readable_line + f'{scaled_filtered_fretboard[string_number][0]}|{representation.spacing()}' 
 			readable_line = readable_line + representation.spacing().join(scaled_filtered_fretboard[string_number][1:])
 			readable.append(readable_line)
-
+	
 		if not lines_to_list:
 			readable = '\n'.join(readable)
 
@@ -301,8 +364,4 @@ class Guitar:
 		else:
 			print(readable)
 
-	def print_fretboard(self, note):
-		print(note)
-		
 	
-		

@@ -117,7 +117,8 @@ class Scale(object):
 		assert scale_type in Scale.SCALE_TYPES
 		self.scale_type = scale_type
 
-		assert mode_name.lower() in Scale.SCALE_DEFINITIONS[self.scale_type]['mode_names']
+		if mode_name.lower() not in Scale.SCALE_DEFINITIONS[self.scale_type]['mode_names']:
+			raise ScaleError(f'invalid mode "{mode_name}" (for scale type at least.. ).  Options:{Scale.SCALE_DEFINITIONS[self.scale_type]["mode_names"]}')
 		self.mode_name = mode_name.lower()
 
 		# print(self.note_names)

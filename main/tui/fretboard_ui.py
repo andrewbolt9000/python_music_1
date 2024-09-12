@@ -5,7 +5,7 @@ import npyscreen
 from typing import List
 
 
-from lib.guitar import Guitar
+from lib.guitar import Guitar, GUITAR_REPRESENTATIONS
 from lib.note import Note, NoteInterval
 from lib.scale import Scale
 
@@ -16,43 +16,68 @@ class KeySlider(npyscreen.Slider):
 		
 	def translate_value(self):
 		root_note_name = Note.NOTE_NAMES_2[int(self.value)]
-		root_note_name = root_note_name.rjust(2)
+		root_note_name = root_note_name.ljust(2)
 		return root_note_name
 
 class TitleKeySlider(npyscreen.wgtitlefield.TitleText):
 	_entry_type = KeySlider
 
 
+# class NewMultiLineClass
+#         # Do all sorts of clever things here!
+#         # ....
+
+#         pass 
+
+class BoxSelectOne(npyscreen.BoxBasic):
+	_contained_widget = npyscreen.SelectOne
+
+
+class BoxTitleFixedText(npyscreen.BoxBasic):
+	_contained_widget = npyscreen.FixedText
+
+
+class BoxTitlePager(npyscreen.BoxBasic):
+	_contained_widget = npyscreen.Pager
+
+
+
+# class PopupStyleForm(npyscreen.Popup):
+
+	
+
+class SelectFileExample(npyscreen.Form):
+	def create(self):
+		key_of_choice = 'p'
+		what_to_display = 'Press {} for popup \n Press escape key to quit'.format(key_of_choice)
+
+		self.how_exited_handers[npyscreen.wgwidget.EXITED_ESCAPE] = self.exit_application
+		self.add_handlers({key_of_choice: self.spawn_file_dialog})
+		self.add(npyscreen.FixedText, value=what_to_display)
+
+	def spawn_file_dialog(self, code_of_key_pressed):
+		the_selected_file = npyscreen.selectFile()
+		npyscreen.notify_wait('That returned: {}'.format(the_selected_file), title= 'results')
+
+
 class MainForm(npyscreen.Form):
 	def afterEditing(self):
 		self.parentApp.setNextForm(None)
 	
+	def while_editing(self, arg):
+		self.update_fretboard()
+
 	def adjust_widgets(self):
 		if len(self.scale_type.value) > 0:
 			scale_type = list(Scale.SCALE_DEFINITIONS.keys())[self.scale_type.value[0]]
 			self.scale_mode.values = Scale.SCALE_DEFINITIONS[scale_type]['mode_names']
 			# self.scale_mode.value = 0
 			self.scale_mode.display()
+			self.fretboard_viewer.display()
 		# if self.scale_key.value:
 		# 	self.fretboard_viewer.values = ['test']
-		if len(self.scale_type.value) > 0 \
-				and len(self.scale_mode.value) > 0:
-			scale_type = list(Scale.SCALE_DEFINITIONS.keys())[self.scale_type.value[0]]
-			scale_mode_selection = self.scale_mode.value
-			scale_key = Note.NOTE_NAMES_2[int(self.scale_key.value)]
-			if len(scale_mode_selection) > 0:
-				scale_mode = list(Scale.SCALE_DEFINITIONS[scale_type]['mode_names'])[scale_mode_selection[0]]
-				scale = Scale(
-					root_name=scale_key,
-					scale_type=scale_type,
-					mode_name=scale_mode,
-				) 
-				fretboard = Guitar(scale=scale)
-				readable_fretboard = fretboard.print_readable_basic(return_string=True, lines_to_list=True, representation_type='color_degree_emoji')
-				self.fretboard_viewer.values = readable_fretboard
-				self.fretboard_viewer.display()
 
-		# self.update_fretboard()
+		self.update_fretboard()
 
 
 	def update_fretboard(self):
@@ -69,9 +94,11 @@ class MainForm(npyscreen.Form):
 					mode_name=scale_mode,
 				) 
 				fretboard = Guitar(scale=scale)
-				readable_fretboard = fretboard.print_readable_basic(return_string=True, lines_to_list=True, representation_type='color_degree_emoji')
+				readable_fretboard = fretboard.print_readable_basic(return_string=True, lines_to_list=True, representation_type='extra_spacing')
 				self.fretboard_viewer.values = readable_fretboard
-				self.fretboard_viewer.display()
+				# self.fretboard_viewer.display()
+		self.fretboard_viewer.display()
+
 
 	def create(self):
 		y, x = self.useable_space()
@@ -86,17 +113,20 @@ class MainForm(npyscreen.Form):
 			exit_left=True, 
 			exit_right=True,
 			max_height=3, 
+			max_width=30,
 			name='Type', 
 			value=default_mode_number,
 			values=list(Scale.SCALE_DEFINITIONS.keys()),
 			begin_entry_at=begin_entry_at,
 		)
 
+
 		scale_modes = Scale.SCALE_DEFINITIONS[default_mode]['mode_names']
 		self.scale_mode = self.add(
 			npyscreen.TitleSelectOne, 
 			scroll_exit=True, 
-			max_height=10, 
+			max_height=8, 
+			max_width=30,
 			name='Mode', 
 			value=5,
 			values=scale_modes,
@@ -105,26 +135,70 @@ class MainForm(npyscreen.Form):
 			# rely=0,
 		)
 
+
 		self.scale_key = self.add(
 			TitleKeySlider,
 			scroll_exit=True, 
 			name='Key',
 			label=True,
 			out_of=11,
-			max_width=50,
+			max_width=23,
+			max_height=3,
+
 			height=4,
 			value=9,
+			# use_two_lines=True,
 			begin_entry_at=begin_entry_at,
 		)
 
-		self.fretboard_viewer = self.add(
-			npyscreen.TitlePager,
+		# self.new_line_1 = self.add(
+		# 	npyscreen.TitleFixedText,
+		# 	max_height=1,
+		# 	# label=False,
+		# 	name=' ',
+		# )
+
+
+		representation_types = list(GUITAR_REPRESENTATIONS.keys())
+		# representation_types = ['a','v']
+		self.representation_selector = self.add(
+			npyscreen.TitleSelectOne, 
+			# BoxSelectOne, 
 			scroll_exit=True, 
+			max_height=8, 
+			name='Style', 
+			contained_widget_arguments=dict(
+				value=5,
+				values=representation_types,
+			),
+			value=5,
+			values=representation_types, 
+			# relx=int(x/2),
+			begin_entry_at=begin_entry_at,
+			rely=2,
+			relx=35,
+			# max_width=40,
+		)
+		self.fretboard_viewer = self.add(
+			npyscreen.BoxTitle,
+			# npyscreen.TitlePager,
+			# BoxTitlePager,
+			scroll_exit=True,
+			# slow_scroll=False,
 			name='Fretboard',
 			label=True,
-			max_width=75,		
+			# max_width=75,		
 			values=[],
+			max_height=10,
+			rely=15,
+			relx=1,
+			# field_width=80,
+			# use_two_lines=True,
 		)
+
+
+
+
 		# self.update_fretboard()
 
 class App(npyscreen.NPSAppManaged):
@@ -132,9 +206,11 @@ class App(npyscreen.NPSAppManaged):
 		self.addForm(
 			'MAIN', 
 			MainForm, 
-			name='ASCII Fretboard',
+			name='ASCII Guitar Scales',
 			# minimum_lines=20,
-			lines=25,
+			lines=45,
+			minimum_columns=70,
+			# max_width=100,
 		)
 
 if __name__ == '__main__':
