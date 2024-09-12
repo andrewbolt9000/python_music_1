@@ -166,7 +166,7 @@ class MainForm(npyscreen.Form):
 			scroll_exit=True, 
 			max_height=7, 
 			name='Style', 
-			value=2,
+			value=0,
 			values=representation_types, 
 			# relx=int(x/2),
 			begin_entry_at=begin_entry_at,
@@ -224,15 +224,64 @@ class MainForm(npyscreen.Form):
 
 		# self.update_fretboard()
 
+
+class UltraCoolTheme(npyscreen.ThemeManager):
+	default_colors = {
+	'DEFAULT'     : 'WHITE_BLACK',
+	'FORMDEFAULT' : 'RED_BLACK',
+	'NO_EDIT'     : 'BLUE_BLACK',
+	'STANDOUT'    : 'CYAN_BLACK',
+	'CURSOR'      : 'CYAN_BLACK',
+	'CURSOR_INVERSE': 'BLACK_WHITE',
+	'LABEL'       : 'CYAN_BLACK',
+	'LABELBOLD'   : 'BLACK_CYAN',
+	'CONTROL'     : 'BLUE_BLACK',
+	'IMPORTANT'   : 'GREEN_BLACK',
+	'SAFE'        : 'GREEN_BLACK',
+	'WARNING'     : 'YELLOW_BLACK',
+	'DANGER'      : 'RED_BLACK',
+	'CRITICAL'    : 'BLACK_RED',
+	'GOOD'        : 'GREEN_BLACK',
+	'GOODHL'      : 'GREEN_BLACK',
+	'VERYGOOD'    : 'BLACK_GREEN',
+	'CAUTION'     : 'YELLOW_BLACK',
+	'CAUTIONHL'   : 'BLACK_YELLOW',
+}
+class DefaultTheme(npyscreen.ThemeManager):
+    default_colors = {
+    'DEFAULT'     : 'WHITE_BLACK',
+    'FORMDEFAULT' : 'WHITE_BLACK',
+    'NO_EDIT'     : 'BLUE_BLACK',
+    'STANDOUT'    : 'CYAN_BLACK',
+    'CURSOR'      : 'WHITE_BLACK',
+    'CURSOR_INVERSE': 'BLACK_WHITE',
+    'LABEL'       : 'GREEN_BLACK',
+    'LABELBOLD'   : 'WHITE_BLACK',
+    'CONTROL'     : 'YELLOW_BLACK',
+    'IMPORTANT'   : 'GREEN_BLACK',
+    'SAFE'        : 'GREEN_BLACK',
+    'WARNING'     : 'YELLOW_BLACK',
+    'DANGER'      : 'RED_BLACK',
+    'CRITICAL'    : 'BLACK_RED',
+    'GOOD'        : 'GREEN_BLACK',
+    'GOODHL'      : 'GREEN_BLACK',
+    'VERYGOOD'    : 'BLACK_GREEN',
+    'CAUTION'     : 'YELLOW_BLACK',
+    'CAUTIONHL'   : 'BLACK_YELLOW',
+}
 class App(npyscreen.NPSAppManaged):
 	def onStart(self):
+		npyscreen.setTheme(UltraCoolTheme)
+		# npyscreen.setTheme(DefaultTheme)
+		# npyscreen.setTheme(npyscreen.Themes.ColorfulTheme)
 		self.addForm(
 			'MAIN', 
 			MainForm, 
 			name='ASCII Guitar Scales',
 			# minimum_lines=20,
-			lines=45,
-			minimum_columns=70,
+			lines=30,
+			minimum_columns=50,
+			columns=90,
 			# max_width=100,
 		)
 
