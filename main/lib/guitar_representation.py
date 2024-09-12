@@ -213,6 +213,30 @@ class DotsNoStringsRepresentationWide(RepresentationInterface):
 	def guide(self):
 		return f' String 0    1       3       5       7       9          12          15      17      19      21          24'		
 
+class BasicNoStringsRepresentationUltraWide(RepresentationInterface):
+	def found(self, full_name, degree=None):
+		
+		name = Note.full_name_to_name(full_name=full_name)
+		if degree == 1:
+			return ' ●' + f'{name}'.ljust(2, ' ')
+		else:
+			return '  ' + f'{name}'.ljust(2, ' ')
+		# if degree == 1:
+		# 	d = '●'
+		# else:
+		# 	d = degree
+
+		return '  ' + f'{d}'.ljust(2, ' ')
+
+	def not_found(self, full_name=None, degree=None):
+		return '    '
+
+	def spacing(self, full_name=None, degree=None):
+		return '|'
+
+	def guide(self):
+		return f' String                   3         5         7         9             12             15        17        19        21             24'		
+
 
 
 class BasicNoStringsRepresentationWide(RepresentationInterface):
@@ -387,6 +411,7 @@ class DotsDegreeRepresentationMicro(RepresentationInterface):
 
 
 GUITAR_REPRESENTATIONS = {
+	"Basic No String Ultra Wide":	BasicNoStringsRepresentationUltraWide,
 	"Dots No Strings Wide":	DotsNoStringsRepresentationWide,
 	"No Strings Wide":		ScaleDegreeNoStringsRepresentationWide,
 	"Basic No String Wide":	BasicNoStringsRepresentationWide,

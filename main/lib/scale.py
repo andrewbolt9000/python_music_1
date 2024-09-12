@@ -15,8 +15,6 @@ class ScaleError(Exception):
 class Scale(object):
 	"""docstring for Scale"""
 
-
-
 	# Other modes derived from this
 	DIATONIC_RECIPE_IONIAN = [
 		2,
