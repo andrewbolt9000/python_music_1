@@ -55,7 +55,13 @@ class MainForm(npyscreen.Form):
 	def adjust_widgets(self):
 		if len(self.scale_type.value) > 0:
 			scale_type = list(Scale.SCALE_DEFINITIONS.keys())[self.scale_type.value[0]]
-			self.scale_mode.values = Scale.SCALE_DEFINITIONS[scale_type]['mode_names']
+			mode_names = Scale.SCALE_DEFINITIONS[scale_type]['mode_names']
+
+			# Set default for mode if not enough options for scale type
+			if self.scale_mode.value[0] > len(mode_names) - 1:
+				self.scale_mode.value[0] = 0
+
+			self.scale_mode.values = mode_names
 			# self.scale_mode.value = 0
 			self.scale_mode.display()
 			self.fretboard_viewer.display()
@@ -105,7 +111,7 @@ class MainForm(npyscreen.Form):
 			scroll_exit=True, 
 			exit_left=True, 
 			exit_right=True,
-			max_height=3, 
+			max_height=5, 
 			max_width=30,
 			name='Type', 
 			value=default_mode_number,
@@ -183,7 +189,7 @@ class MainForm(npyscreen.Form):
 			npyscreen.TitleSelectOne, 
 			# BoxSelectOne, 
 			scroll_exit=True, 
-			max_height=6, 
+			max_height=7, 
 			name='Tuning',
 			value=0,
 			values=tuning_types, 
@@ -204,10 +210,10 @@ class MainForm(npyscreen.Form):
 			# slow_scroll=False,
 			name='Fretboard',
 			label=True,
-			# max_width=75,		
+			# max_width=75,		 
 			values=[],
-			max_height=9,
-			rely=17,
+			max_height=10,
+			rely=18,
 			relx=1,
 			# field_width=80,
 			# use_two_lines=True,

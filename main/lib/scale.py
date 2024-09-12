@@ -80,12 +80,45 @@ class Scale(object):
 		'super locrian',
 	]
 
+	DIMINISHED_RECIPE = [
+		2,
+		1,
+		2,
+		1,
+		2,
+		1,
+		2,
+		1,
+	]
+	# TODO:  Make this work with capitol letters too  (lower())
+	DIMINISHED_MODE_NAMES = [
+		'whole-half',
+		'half-whole',
+	]
+
+	WHOLE_TONE_RECIPE = [
+		2,
+		2,
+		2,
+		2,
+		2,
+		2,
+	]
+	WHOLE_TONE_MODE_NAMES = [
+		'the only',
+	]
+
 	DIATONIC_TYPE = 'diatonic'
 	MELODIC_MINOR_TYPE = 'melodic minor'
+	DIMINISHED_TYPE = 'diminished'
+	WHOLE_TONE_TYPE = 'whole tone'
 	SCALE_TYPES = [
 		DIATONIC_TYPE,
 		MELODIC_MINOR_TYPE,
+		DIMINISHED_TYPE,
+		WHOLE_TONE_TYPE,
 	]
+
 
 	SCALE_DEFINITIONS = {
 		DIATONIC_TYPE: {
@@ -97,7 +130,17 @@ class Scale(object):
 			'mode_names': MELODIC_MINOR_MODE_NAMES,
 			'relative_intervals': MELODIC_MINOR_RECIPE_AEOLIAN,
 			'alternate_names': MELODIC_MINOR_MODE_ALTERNATIVE_NAMES,
-		}		
+		},
+		DIMINISHED_TYPE: {
+			'mode_names': DIMINISHED_MODE_NAMES,
+			'relative_intervals': DIMINISHED_RECIPE,
+			'alternate_names': DIMINISHED_MODE_NAMES,
+		},
+		WHOLE_TONE_TYPE: {
+			'mode_names': WHOLE_TONE_MODE_NAMES,
+			'relative_intervals': WHOLE_TONE_RECIPE,
+			'alternate_names': WHOLE_TONE_MODE_NAMES,
+		},		
 	}
 
 
@@ -118,7 +161,7 @@ class Scale(object):
 		self.scale_type = scale_type
 
 		if mode_name.lower() not in Scale.SCALE_DEFINITIONS[self.scale_type]['mode_names']:
-			raise ScaleError(f'invalid mode "{mode_name}" (for scale type at least.. ).  Options:{Scale.SCALE_DEFINITIONS[self.scale_type]["mode_names"]}')
+			raise ScaleError(f'invalid mode "{mode_name.lower()}" (for scale type at least.. ).  Options:{Scale.SCALE_DEFINITIONS[self.scale_type]["mode_names"]}')
 		self.mode_name = mode_name.lower()
 
 		# print(self.note_names)
@@ -183,7 +226,7 @@ class Scale(object):
 		
 		# This function is broken if it does not pass the assertion,
 		# ... meaning the program is wrong not the user.
-		assert sum(interval_recipe) == 12
+		assert sum(interval_recipe) == 12, f'Not 12.  Was {sum(interval_recipe)}'
 		return interval_recipe
 
 

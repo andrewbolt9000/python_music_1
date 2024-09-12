@@ -421,12 +421,14 @@ class Guitar:
 	A_SPECIAL = 'A\'s Special' 
 	FIFTHS = 'Fifths' 
 	BOUZOUKI = 'Bouzouki'
+	SEVEN_STR = '7 String'
 	TUNING_DEFINITIONS = {
 		STANDARD 	: ['E3', 'A4', 'D4', 'G4', 'B5', 'E5'],
 		DROP_D   	: ['D3', 'A4', 'D4', 'G4', 'B5', 'E5'],
 		A_SPECIAL  	: ['C3', 'G4', 'D4', 'G4', 'B5', 'E5'],
 		FIFTHS  	: ['C3', 'G4', 'D4', 'A4', 'E5', 'B6'],
 		BOUZOUKI   	: ['D3', 'A4', 'E4', 'B4'],
+		SEVEN_STR   : ['B3', 'E3', 'A4', 'D4', 'G4', 'B5', 'E5'],
 	}
 
 
