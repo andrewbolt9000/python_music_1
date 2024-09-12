@@ -4,6 +4,22 @@ from typing import List
 from lib.note import Note, NoteInterval
 from lib.scale import Scale
 
+
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+print(f'{bcolors.WARNING}Warning: No active frommets remain. Continue?{bcolors.ENDC}')
+# print(bcolors.WARNING + "Warning: No active frommets remain. Continue?" + bcolors.ENDC)
+
+
 class RepresentationInterface:
 	def found(self, full_name, degree=None):
 		return None
@@ -26,10 +42,27 @@ class NoteRepresentation(RepresentationInterface):
 		return Note(full_name=full_name)
 
 	def not_found(self, full_name=None, degree=None):
-		return ' ' 
+		return '⎯⎯'
 
 	def spacing(self, full_name=None, degree=None):
-		return '-'
+		return '┼'
+	
+	def guide(self):
+		return f' String  ||      {bcolors.OKCYAN}3      5      7      9       12     15   17   19   21     24{bcolors.ENDC}'		
+
+
+class FullNameRepresentationV2(RepresentationInterface):
+	def found(self, full_name, degree=None):
+		return full_name.rjust(3, '⎯')
+
+	def not_found(self, full_name=None, degree=None):
+		return '⎯⎯⎯'
+
+	def spacing(self, full_name=None, degree=None):
+		return '┼'
+	
+	def guide(self):
+		return f' String  ||            3       5       7       9          12          15      17      19      21          24'		
 
 
 class FullNameRepresentation(RepresentationInterface):
@@ -37,22 +70,43 @@ class FullNameRepresentation(RepresentationInterface):
 		return full_name
 
 	def not_found(self, full_name=None, degree=None):
-		return '0'
+		return '┼'
 
 	def spacing(self, full_name=None, degree=None):
-		return '-'
+		return '⎯'
+
+	def guide(self):
+		return f' String  |     3    5    7    9      12     15   17   19   21     24'		
 
 
 class BasicNameRepresentation(RepresentationInterface):
 	def found(self, full_name, degree=None):
-		return Note.full_name_to_name(full_name=full_name)
+		return Note.full_name_to_name(full_name=full_name).rjust(2, '⎯')
 
 	def not_found(self, full_name=None, degree=None):
-		return ' '
+		return '⎯⎯'
 
 	def spacing(self, full_name=None, degree=None):
-		return '-'
+		return '┼'
 
+	def guide(self):
+		return f' String  ||       3     5     7     9       12       15    17    19    21       24'		
+	
+
+
+class BasicNameRepresentationWide(RepresentationInterface):
+	def found(self, full_name, degree=None):
+		return Note.full_name_to_name(full_name=full_name).rjust(3, '⎯')
+
+	def not_found(self, full_name=None, degree=None):
+		return '⎯⎯⎯'
+
+	def spacing(self, full_name=None, degree=None):
+		return '┼'
+
+	def guide(self):
+		return f' String  ||           3       5       7       9          12          15      17      19      21          24'		
+	
 
 
 class NamelessRepresentation(RepresentationInterface):
@@ -81,10 +135,151 @@ class ScaleDegreeRepresentation(RepresentationInterface):
 		return f'{degree}'
 
 	def not_found(self, full_name=None, degree=None):
-		return '+'
+		return '┼'
 
 	def spacing(self, full_name=None, degree=None):
-		return '-'
+		return '⎯'
+	def guide(self):
+		return f'String        3   5   7   9    12    15  17  19  21    24'
+
+
+class ScaleDegreeAltRepresentation(RepresentationInterface):
+	def found(self, full_name, degree=None):
+		return f'{degree}'
+
+	def not_found(self, full_name=None, degree=None):
+		return '⎯'
+
+	def spacing(self, full_name=None, degree=None):
+		return '┼'
+	def guide(self):
+		return f'String        3   5   7   9     12    15  17  19  21    24'
+
+
+class ScaleDegreeRepresentationWide(RepresentationInterface):
+	def found(self, full_name, degree=None):
+		if degree == 1:
+			d = '●'
+		else:
+			d = degree
+
+		return f'{d}'.rjust(3, '⎯')
+
+	def not_found(self, full_name=None, degree=None):
+		return '⎯⎯⎯'
+
+	def spacing(self, full_name=None, degree=None):
+		return '┼'
+
+	def guide(self):
+		return f' String  ||           3       5       7       9          12          15      17      19      21          24'		
+
+
+
+class ScaleDegreeNoStringsRepresentationWide(RepresentationInterface):
+	def found(self, full_name, degree=None):
+		if degree == 1:
+			d = '●'
+		else:
+			d = degree
+
+		return ' ' + f'{d}'.ljust(2, ' ')
+
+	def not_found(self, full_name=None, degree=None):
+		return '   '
+
+	def spacing(self, full_name=None, degree=None):
+		return '|'
+
+	def guide(self):
+		return f' String   ||          3       5       7       9          12          15      17      19      21          24'		
+
+
+class DotsNoStringsRepresentationWide(RepresentationInterface):
+	def found(self, full_name, degree=None):
+		if degree == 1:
+			d = '●'
+		else:
+			d = '●'
+
+		return ' ' + f'{d}'.ljust(2, ' ')
+
+	def not_found(self, full_name=None, degree=None):
+		return '   '
+
+	def spacing(self, full_name=None, degree=None):
+		return '|'
+
+	def guide(self):
+		return f' String 0    1       3       5       7       9          12          15      17      19      21          24'		
+
+
+
+class BasicNoStringsRepresentationWide(RepresentationInterface):
+	def found(self, full_name, degree=None):
+		
+		name = Note.full_name_to_name(full_name=full_name)
+		if degree == 1:
+			return '●' + f'{name}'.ljust(2, ' ')
+		else:
+			return ' ' + f'{name}'.ljust(2, ' ')
+		# if degree == 1:
+		# 	d = '●'
+		# else:
+		# 	d = degree
+
+		return ' ' + f'{d}'.ljust(2, ' ')
+
+	def not_found(self, full_name=None, degree=None):
+		return '   '
+
+	def spacing(self, full_name=None, degree=None):
+		return '|'
+
+	def guide(self):
+		return f' String   ||          3       5       7       9          12          15      17      19      21          24'		
+
+
+
+class CleanRepresentation(RepresentationInterface):
+	def found(self, full_name, degree=None):
+		if degree == 1:
+			return '●'
+			# return '⦿'
+			# return '◎'
+		# return '●'
+		# return '⦿'
+		return '◎'
+	def not_found(self, full_name=None, degree=None):
+		return ' '
+
+	def spacing(self, full_name=None, degree=None):
+		return ' '
+
+	def guide(self):
+		return f' String{self.spacing()}|     3   5   7   9     12    15  17  19  21    24'		
+	
+
+class CleanArpRepresentation(RepresentationInterface):
+	def found(self, full_name, degree=None):
+		if degree == 1:
+			return '●'
+			# return '⦿'
+			# return '◎'
+		if degree in [3, 5]:
+			# return '●'
+			# return '⦿'
+			return '◎'
+		return ' '
+
+	def not_found(self, full_name=None, degree=None):
+		return ' '
+
+	def spacing(self, full_name=None, degree=None):
+		return ' '
+
+	def guide(self):
+		return f' String{self.spacing()}|     3   5   7   9     12    15  17  19  21    24'		
 
 class ScaleDegreeDebugRepresentation(RepresentationInterface):
 	def found(self, full_name, degree=None):
@@ -137,7 +332,43 @@ class ColorDegreeEmojiRepresentation(RepresentationInterface):
 	def spacing(self, full_name=None, degree=None):
 		return '⎯'
 
-class SpacedDegreeEmojiRepresentation(RepresentationInterface):
+class DotsDegreeRepresentationWide(RepresentationInterface):
+	def found(self, full_name, degree=None):
+		if degree == 1:
+			return '⎯⎯●'
+		else:
+			return '⎯⎯⦿'			
+			# return '●'
+
+	def not_found(self, full_name=None, degree=None):
+		return '⎯⎯⎯'
+
+	def spacing(self, full_name=None, degree=None):
+		return '┼'
+
+	def guide(self):
+		return f' String   ||          3       5       7       9          12          15      17      19      21          24'		
+	
+
+class DotsDegreeRepresentationCompact(RepresentationInterface):
+	def found(self, full_name, degree=None):
+		if degree == 1:
+			return '⎯●'
+		else:
+			return '⎯⦿'			
+			# return '●'
+
+	def not_found(self, full_name=None, degree=None):
+		return '⎯⎯'
+
+	def spacing(self, full_name=None, degree=None):
+		return '┼'
+
+	def guide(self):
+		return f' String           3     5     7     9       12       15    17    19    21       24'		
+	
+
+class DotsDegreeRepresentationMicro(RepresentationInterface):
 	def found(self, full_name, degree=None):
 		if degree == 1:
 			return '●'
@@ -146,37 +377,56 @@ class SpacedDegreeEmojiRepresentation(RepresentationInterface):
 			# return '●'
 
 	def not_found(self, full_name=None, degree=None):
-		return '┼'
+		return '⎯'
 
 	def spacing(self, full_name=None, degree=None):
-		return '⎯⎯'
+		return '┼'
 
 	def guide(self):
-		return f' String |        3     5     7     9        12       15    17    19    21       24'		
-
+		return f' String       3   5   7   9     12    15  17  19  21    24'		
+	
 
 
 
 GUITAR_REPRESENTATIONS = {
-	"note_object":			NoteRepresentation,
-	"full_name":			FullNameRepresentation,
-	"basic_name":			BasicNameRepresentation,
-	"nameless":				NamelessRepresentation,
+	"Dots Wide":			DotsDegreeRepresentationWide,
+	"No Strings Wide":		ScaleDegreeNoStringsRepresentationWide,
+	"Dots No Strings Wide":		DotsNoStringsRepresentationWide,
+	"Basic No String Wide":	BasicNoStringsRepresentationWide,
+	"Basic Wide":			BasicNameRepresentationWide,
+	"Degree Wide":			ScaleDegreeRepresentationWide,
+	"Full Name Wide":		FullNameRepresentationV2,
+	"Dots Compact":			DotsDegreeRepresentationCompact,
+	"Basic Compact":		BasicNameRepresentation,
+	"Dots Micro":			DotsDegreeRepresentationMicro,
+	"Degree":				ScaleDegreeRepresentation,
+	"Degree Alt":			ScaleDegreeAltRepresentation,
+	"degree_debug":			ScaleDegreeDebugRepresentation,
+	"clean":				CleanRepresentation,
+	"clean arp":			CleanArpRepresentation,
+	# "nameless":				NamelessRepresentation,
+	# "full_name":			FullNameRepresentation,
+	# "note_object":			NoteRepresentation,
 	# "emoji":				EmojiRepresentation,
-	"degree":				ScaleDegreeRepresentation,
 	# "degree_emoji":		DegreeEmojiRepresentation,
 	# "color_degree_emoji":	ColorDegreeEmojiRepresentation,
-	"extra_spacing":		SpacedDegreeEmojiRepresentation,
-	"degree_debug":			ScaleDegreeDebugRepresentation,
 }
 def GuitarRepresentationFactory(representation_type):
 	return GUITAR_REPRESENTATIONS[representation_type]()
 
 class Guitar:
 	
-	STANDARD = 'standard'
+	STANDARD = 'Standard'
+	DROP_D = 'Drop D'
+	A_SPECIAL = 'A\'s Special' 
+	FIFTHS = 'Fifths' 
+	BOUZOUKI = 'Bouzouki'
 	TUNING_DEFINITIONS = {
-		STANDARD : ['E3', 'A4', 'D4', 'G4', 'B5', 'E5']
+		STANDARD 	: ['E3', 'A4', 'D4', 'G4', 'B5', 'E5'],
+		DROP_D   	: ['D3', 'A4', 'D4', 'G4', 'B5', 'E5'],
+		A_SPECIAL  	: ['C3', 'G4', 'D4', 'G4', 'B5', 'E5'],
+		FIFTHS  	: ['C3', 'G4', 'D4', 'A4', 'E5', 'B6'],
+		BOUZOUKI   	: ['D3', 'A4', 'E4', 'B4'],
 	}
 
 
@@ -354,6 +604,8 @@ class Guitar:
 			readable_line = readable_line + f'{human_string_number} ({self._string_tunings[string_number]}) '
 			readable_line = readable_line + f'{scaled_filtered_fretboard[string_number][0]}|{representation.spacing()}' 
 			readable_line = readable_line + representation.spacing().join(scaled_filtered_fretboard[string_number][1:])
+			readable_line = readable_line + representation.spacing()
+
 			readable.append(readable_line)
 	
 		if not lines_to_list:

@@ -275,7 +275,7 @@ class Note:
 			octave = int(full_name[2:])
 		# Validate
 		assert name in Note.NOTE_NAMES_2
-		assert octave in list(range(0,8))
+		assert octave in list(range(0, 10))
 
 		# VALIDATE ELSEWHERE???
 		validated_name_and_octave = Note.validate_name_and_octave(name=name.upper(), octave=octave)

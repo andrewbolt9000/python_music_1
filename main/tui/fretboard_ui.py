@@ -44,21 +44,6 @@ class BoxTitlePager(npyscreen.BoxBasic):
 
 # class PopupStyleForm(npyscreen.Popup):
 
-	
-
-class SelectFileExample(npyscreen.Form):
-	def create(self):
-		key_of_choice = 'p'
-		what_to_display = 'Press {} for popup \n Press escape key to quit'.format(key_of_choice)
-
-		self.how_exited_handers[npyscreen.wgwidget.EXITED_ESCAPE] = self.exit_application
-		self.add_handlers({key_of_choice: self.spawn_file_dialog})
-		self.add(npyscreen.FixedText, value=what_to_display)
-
-	def spawn_file_dialog(self, code_of_key_pressed):
-		the_selected_file = npyscreen.selectFile()
-		npyscreen.notify_wait('That returned: {}'.format(the_selected_file), title= 'results')
-
 
 class MainForm(npyscreen.Form):
 	def afterEditing(self):
@@ -82,7 +67,15 @@ class MainForm(npyscreen.Form):
 
 	def update_fretboard(self):
 		if len(self.scale_type.value) > 0 \
-				and len(self.scale_mode.value) > 0:
+				and len(self.scale_mode.value) > 0 \
+				and len(self.tuning_selector.value) > 0 \
+				and len(self.representation_selector.value) > 0:
+
+			representation_type = list(GUITAR_REPRESENTATIONS.keys())[self.representation_selector.value[0]] 
+
+			tuning_type = list(Guitar.TUNING_DEFINITIONS.keys())[self.tuning_selector.value[0]] 
+
+
 			scale_type = list(Scale.SCALE_DEFINITIONS.keys())[self.scale_type.value[0]]
 			scale_mode_selection = self.scale_mode.value
 			scale_key = Note.NOTE_NAMES_2[int(self.scale_key.value)]
@@ -93,8 +86,8 @@ class MainForm(npyscreen.Form):
 					scale_type=scale_type,
 					mode_name=scale_mode,
 				) 
-				fretboard = Guitar(scale=scale)
-				readable_fretboard = fretboard.print_readable_basic(return_string=True, lines_to_list=True, representation_type='extra_spacing')
+				fretboard = Guitar(scale=scale, tuning=tuning_type)
+				readable_fretboard = fretboard.print_readable_basic(return_string=True, lines_to_list=True, representation_type=representation_type)
 				self.fretboard_viewer.values = readable_fretboard
 				# self.fretboard_viewer.display()
 		self.fretboard_viewer.display()
@@ -165,13 +158,9 @@ class MainForm(npyscreen.Form):
 			npyscreen.TitleSelectOne, 
 			# BoxSelectOne, 
 			scroll_exit=True, 
-			max_height=8, 
+			max_height=7, 
 			name='Style', 
-			contained_widget_arguments=dict(
-				value=5,
-				values=representation_types,
-			),
-			value=5,
+			value=2,
 			values=representation_types, 
 			# relx=int(x/2),
 			begin_entry_at=begin_entry_at,
@@ -179,6 +168,34 @@ class MainForm(npyscreen.Form):
 			relx=35,
 			# max_width=40,
 		)
+
+
+		# self.new_line_2 = self.add(
+		# 	npyscreen.TitleFixedText,
+		# 	max_height=1,
+		# 	# label=False,
+		# 	name=' ',
+		# )
+
+
+		tuning_types = list(Guitar.TUNING_DEFINITIONS.keys())
+		self.tuning_selector = self.add(
+			npyscreen.TitleSelectOne, 
+			# BoxSelectOne, 
+			scroll_exit=True, 
+			max_height=6, 
+			name='Tuning',
+			value=0,
+			values=tuning_types, 
+			# relx=int(x/2),
+			begin_entry_at=begin_entry_at,
+			rely=10,
+			relx=35,
+			# max_width=40,
+		)
+
+
+		
 		self.fretboard_viewer = self.add(
 			npyscreen.BoxTitle,
 			# npyscreen.TitlePager,
@@ -189,8 +206,8 @@ class MainForm(npyscreen.Form):
 			label=True,
 			# max_width=75,		
 			values=[],
-			max_height=10,
-			rely=15,
+			max_height=9,
+			rely=17,
 			relx=1,
 			# field_width=80,
 			# use_two_lines=True,
