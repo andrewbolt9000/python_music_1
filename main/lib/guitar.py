@@ -389,10 +389,10 @@ class DotsDegreeRepresentationMicro(RepresentationInterface):
 
 
 GUITAR_REPRESENTATIONS = {
-	"Dots No Strings Wide":		DotsNoStringsRepresentationWide,
+	"Dots No Strings Wide":	DotsNoStringsRepresentationWide,
 	"No Strings Wide":		ScaleDegreeNoStringsRepresentationWide,
-	"Dots Wide":			DotsDegreeRepresentationWide,
 	"Basic No String Wide":	BasicNoStringsRepresentationWide,
+	"Dots Wide":			DotsDegreeRepresentationWide,
 	"Basic Wide":			BasicNameRepresentationWide,
 	"Degree Wide":			ScaleDegreeRepresentationWide,
 	"Full Name Wide":		FullNameRepresentationV2,

@@ -111,7 +111,7 @@ class MainForm(npyscreen.Form):
 			scroll_exit=True, 
 			exit_left=True, 
 			exit_right=True,
-			max_height=5, 
+			max_height=6, 
 			max_width=30,
 			name='Type', 
 			value=default_mode_number,
@@ -188,19 +188,17 @@ class MainForm(npyscreen.Form):
 		self.tuning_selector = self.add(
 			npyscreen.TitleSelectOne, 
 			# BoxSelectOne, 
-			scroll_exit=True, 
-			max_height=7, 
+			scroll_exit=True,
+			max_height=7,
 			name='Tuning',
 			value=0,
-			values=tuning_types, 
+			values=tuning_types,
 			# relx=int(x/2),
 			begin_entry_at=begin_entry_at,
 			rely=10,
 			relx=35,
 			# max_width=40,
 		)
-
-
 		
 		self.fretboard_viewer = self.add(
 			npyscreen.BoxTitle,
@@ -210,7 +208,7 @@ class MainForm(npyscreen.Form):
 			# slow_scroll=False,
 			name='Fretboard',
 			label=True,
-			# max_width=75,		 
+			# max_width=75,
 			values=[],
 			max_height=10,
 			rely=18,

@@ -80,6 +80,34 @@ class Scale(object):
 		'super locrian',
 	]
 
+	HARMONIC_MINOR_RECIPE_AEOLIAN = [
+		2,
+		1,
+		2,
+		2,
+		1,
+		3,
+		1,
+	]
+	HARMONIC_MINOR_MODE_NAMES = [
+		'harmonic minor',
+		'locrian natural 6',
+		'ionian #5',
+		'dorian #4',
+		'phrygian dominant',
+		'lydian #9',
+		'altered diminished',
+	]
+	HARMONIC_MINOR_MODE_ALTERNATIVE_NAMES = [
+		None,
+		None,
+		None,
+		None,
+		None,
+		None,
+		'Locrian b4 bb7',
+	]
+
 	DIMINISHED_RECIPE = [
 		2,
 		1,
@@ -112,13 +140,7 @@ class Scale(object):
 	MELODIC_MINOR_TYPE = 'melodic minor'
 	DIMINISHED_TYPE = 'diminished'
 	WHOLE_TONE_TYPE = 'whole tone'
-	SCALE_TYPES = [
-		DIATONIC_TYPE,
-		MELODIC_MINOR_TYPE,
-		DIMINISHED_TYPE,
-		WHOLE_TONE_TYPE,
-	]
-
+	HARMONIC_MINOR_TYPE = 'harmonic minor'
 
 	SCALE_DEFINITIONS = {
 		DIATONIC_TYPE: {
@@ -126,6 +148,11 @@ class Scale(object):
 			'relative_intervals': DIATONIC_RECIPE_IONIAN,
 			'alternate_names': DIATONIC_MODE_ALTERNATIVE_NAMES,
 		},
+		HARMONIC_MINOR_TYPE: {
+			'mode_names': HARMONIC_MINOR_MODE_NAMES,
+			'relative_intervals': HARMONIC_MINOR_RECIPE_AEOLIAN,
+			'alternate_names': HARMONIC_MINOR_MODE_ALTERNATIVE_NAMES,
+		},	
 		MELODIC_MINOR_TYPE: {
 			'mode_names': MELODIC_MINOR_MODE_NAMES,
 			'relative_intervals': MELODIC_MINOR_RECIPE_AEOLIAN,
@@ -140,8 +167,9 @@ class Scale(object):
 			'mode_names': WHOLE_TONE_MODE_NAMES,
 			'relative_intervals': WHOLE_TONE_RECIPE,
 			'alternate_names': WHOLE_TONE_MODE_NAMES,
-		},		
+		},
 	}
+	SCALE_TYPES = list(SCALE_DEFINITIONS)
 
 
 	_interval_recipe = None
