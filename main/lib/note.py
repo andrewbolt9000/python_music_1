@@ -31,6 +31,9 @@ class NoteIntervalError(Exception):
         super().__init__(message)
            
 
+
+# ??????????????????? Deprecated ???
+# Or is useful?
 NOTE_ITERATORE_DIRECTION_HIGHER = 'higher'
 NOTE_ITERATORE_DIRECTION_LOWER = 'lower'
 class NoteIterator:
@@ -116,6 +119,7 @@ class NoteInterval:
 	]
 	_semitones = None
 	_name = None
+
 	def __init__(self, semitones=None, name=None):
 		assert semitones is not None or name is not None, 'NoteInterval requires semitones or name args'
 		# xor
@@ -131,6 +135,7 @@ class NoteInterval:
 	@property
 	def name(self):
 		if self._name is None:
+			assert self._semitones >= 0
 			if self._semitones < 0:
 				direction = '(down)'
 			else:
@@ -151,8 +156,12 @@ class NoteInterval:
 
 	@property
 	def semitones(self):
-		return self._semitones 
+		return int(self._semitones)
 
+	@semitones.setter
+	def semitones(self, value:int):
+		self._semitones = value
+		self._name = None
 
 	# This is maybe a bad idea but different types are returned based on the input types.
 	def __add__(self, obj):
@@ -164,7 +173,16 @@ class NoteInterval:
 		else:
 			raise NoteError('Cant add these types.')
 
+	def __mod__(self, other:int):
+		assert self._semitones >= 0, "Must be positive.  (or write tests for negative values)"
+		mod_12 = self._semitones % other
+		return NoteInterval(semitones=mod_12)
 
+	# Depricate if not more useful than __mod__
+	def save_mod_12(self):
+		assert self._semitones >= 0
+		self._semitones = self._semitones % 12
+		return self
 
 class Note:
 	SPEED_OF_SOUND_METER_PER_SECOND = 343
@@ -300,7 +318,7 @@ class Note:
 	def __sub__(self, obj):
 		if type(obj) is Note:
 			difference = self.absolute_value - obj.absolute_value
-			assert difference >= 0, 'For now.........'
+			# assert difference >= 0, 'For now.........'
 			return NoteInterval(semitones=difference)
 		elif type(obj) is NoteInterval:
 			difference = self.absolute_value - obj.semitones

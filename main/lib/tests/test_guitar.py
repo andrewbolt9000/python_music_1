@@ -13,7 +13,7 @@ class TestGuitar:
 	def test_guitar_init(self):
 		scale = Scale(root_name='A', mode_name='aeolian')
 		testee = Guitar(tuning='standard', scale=scale)
-		assert testee._string_tunings == ['E3', 'A4', 'D4', 'G4', 'B5', 'E5']
+		assert testee._string_tunings ==  ['E2', 'A2', 'D3', 'G3', 'B3', 'E4']
 		
 	def test_empty_fretboard(self):
 		testee = Guitar.build_empty_fretboard(['A', 'B', 'C'], max_fret=10)

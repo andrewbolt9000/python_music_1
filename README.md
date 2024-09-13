@@ -16,6 +16,11 @@ pip install -r requirements.txt
 ```
 ![image info](readme_images/tui_example_1.png)
 
+## Cool things
+- `NoteInterval` has a `%` operator.  Useful for `NoteInterval(semitones=13) % 12`
+- Arithetic with `Note` and `NoteInterval`
+
+
 ## Road Map
 
 ### Library

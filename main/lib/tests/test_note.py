@@ -85,7 +85,7 @@ class TestNote:
 		assert result == dict(name='A', octave=0)
 
 
-		
+
 class TestNoteInterval:
 
 	def test_note_interval_init(self):
@@ -166,4 +166,42 @@ class TestNoteInterval:
 		result_2 = NoteInterval(name='octave') + NoteInterval(name='minor 2')
 		assert type(result_2) is NoteInterval
 		assert result_2.name == 'b 13'
+
+	def test_save_mod_12(self):
+		testee = NoteInterval(semitones=3)
+		
+		# assert (testee % 3).semitones == 0 
+		assert testee.save_mod_12().semitones == 3
+		
+		testee.semitones = 4
+		assert testee.save_mod_12().semitones == 4
+
+		testee.semitones = 13
+		assert testee.save_mod_12().semitones == 1
+
+	def test_semitones_setter(self):
+		testee = NoteInterval(semitones=5)
+		assert testee.semitones == 5
+		testee.semitones = 7
+		assert testee.semitones == 7
+
+	def test_mod(self):
+		testee = NoteInterval(semitones=5)
+		result = testee % 3
+		assert result.semitones == 2
+		assert testee.semitones == 5
+
+		testee.semitones = 1 
+		result = testee % 3 
+		assert result.semitones == 1
+
+		# Combine with name param
+		result = NoteInterval(name='13') % 12
+		assert result.name == 'major 2'
+
+
+
+
+
+
 

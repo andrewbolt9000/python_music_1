@@ -1,3 +1,4 @@
+import math
 
 from typing import List
 
@@ -74,7 +75,7 @@ class Guitar:
 			
 		return fretboard
 
-	# Depenency injected representation of filtered fretboard
+	# ToDo ? Depenency injected representation of filtered fretboard
 	@staticmethod
 	def tuning_and_scale_to_fretboard(
 		string_tunings: List[str], 
@@ -83,9 +84,25 @@ class Guitar:
 		representation_type: str='Full Name Wide', 
 
 	) -> List[List[Note]]:
+
 		# print(f'sts:{string_tunings}')
+
+		# This determins how the string representation will look
 		representation = GuitarRepresentationFactory(representation_type)
+		
+		# Confirm the interval_recipe is valid
 		assert sum(scale.interval_recipe) == 12
+		
+		# Determine the first root note found on the lowest string
+		#  Pass this to the printers so they my highlight chord extensions
+		lowest_string_note = Note(full_name=string_tunings[0])
+		# Find lowest root not for instrument
+		distance_from_lowest_root = Note(name=scale.note_names[0], octave=lowest_string_note.octave) \
+		 	+ NoteInterval(semitones=12) \
+			- lowest_string_note
+		distance_from_lowest_root = distance_from_lowest_root % 12
+		lowest_root = lowest_string_note + distance_from_lowest_root
+
 		fretboard = []
 		for string_number in range(0, len(string_tunings)):
 			string_note = Note(full_name=string_tunings[string_number])
@@ -94,15 +111,29 @@ class Guitar:
 				fret_note = string_note + NoteInterval(fret)
 				if fret_note.name in scale.note_names:
 					degree = scale.note_names.index(fret_note.name) + 1
-					fretboard[string_number].append(representation.found(full_name=fret_note.full_name, degree=degree))
+					dist_from_lowest_root = fret_note - lowest_root
+					# For the first two octaves above the lowest root, this will be 0
+					# 
+					double_octave = math.floor(dist_from_lowest_root.semitones / 24)
+					single_octave = math.floor(dist_from_lowest_root.semitones / 12)
+					fretboard[string_number].append(
+						representation.found(
+							full_name=fret_note.full_name, 
+							degree=degree,
+							relative_single_octave=single_octave,
+							relative_double_octave=double_octave,
+						)
+					)
 				else:
-					fretboard[string_number].append(representation.not_found(full_name=fret_note.full_name))
+					fretboard[string_number].append(
+						representation.not_found(full_name=fret_note.full_name)
+					)
 			
 		return fretboard	
 				
 
 
-
+	# Deprecated??????
 	@staticmethod
 	def tuning_and_scale_to_fretboard_of_notes(string_tunings: List[str], scale: Scale, max_fret: int) -> List[List[Note]]:
 		# print(f'sts:{string_tunings}')

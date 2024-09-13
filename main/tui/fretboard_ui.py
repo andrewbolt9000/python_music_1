@@ -77,29 +77,58 @@ class MyGrid(npyscreen.GridColTitles):
 
         color_a = 'DEFAULT' # WHITE
         color_b = 'CURSOR'  # CYAN
-        color_c = 'DANGER' # RED
-        color_d = 'CURSOR' #
-        color_e = 'CONTROL'
+        color_c = 'SAFE'    # GREEN
+        color_d = 'CAUTION' # YELLOW 
+        color_e = 'DANGER'  # RED
         color_string = 'DANGER'
         color_def = 'DEFAULT'
 
-        if cell_display_value == '●':
+        if cell_display_value == u'◘':
            actual_cell.color = color_a
-        elif cell_display_value == '◉':
+
+        elif cell_display_value == u'●':
+           actual_cell.color = color_a
+        elif cell_display_value == u'◉':
            actual_cell.color = color_b
-        elif cell_display_value == '⦿':
+        elif cell_display_value == u'⦿':
            actual_cell.color = color_c
-        elif cell_display_value == '◎' :
+        elif cell_display_value == u'◎':
+           actual_cell.color = color_d
+        elif cell_display_value == u'✪':
+           actual_cell.color = color_e
+
+        elif cell_display_value == u'⎔':
+           actual_cell.color = color_c
+
+        elif cell_display_value == u'☢︎': # DOESNT WORK
+           actual_cell.color = color_b
+
+        # C_SET = u'◘●◉⦿◎✪☢︎⎔▸▶︎►▼◼︎🁢'
+
+        elif cell_display_value == u'🁢':
            actual_cell.color = color_d
 
-        elif cell_display_value == '|':
+        elif cell_display_value == u'◼︎':
+           actual_cell.color = color_d
+
+        elif cell_display_value in (u'▸', u'▶︎', u'►', u'▼', u'◼︎', u'🁢'):
+            actual_cell.color = color_b
+        elif cell_display_value == u'▼':
+           actual_cell.color = color_b
+        elif cell_display_value == u'►':
+           actual_cell.color = color_b
+        elif cell_display_value == u'▶︎':
+           actual_cell.color = color_b
+
+
+        elif cell_display_value == u'|':
            actual_cell.color = color_string
-        elif cell_display_value == '⎯':
+        elif cell_display_value == u'⎯':
            actual_cell.color = color_string
-        elif cell_display_value == '┼':
+        elif cell_display_value == u'┼':
            actual_cell.color = color_string
         else:
-           actual_cell.color = color_def
+           actual_cell.color = color_b
 
 
 class BoxTitleGrid(npyscreen.BoxBasic):
@@ -214,10 +243,9 @@ class MainForm(npyscreen.Form):
     def create(self):
         y, x = self.useable_space()
 
-
-        begin_entry_at = 7 # Label width
-        default_mode_number = 0
-        default_mode = list(Scale.SCALE_DEFINITIONS.keys())[default_mode_number]
+        begin_entry_at = 7 #  Label width
+        default_scale_mode_value = 0
+        default_mode = list(Scale.SCALE_DEFINITIONS.keys())[default_scale_mode_value]
         self.scale_type = self.add(
             npyscreen.TitleSelectOne, 
             scroll_exit=True, 
@@ -226,7 +254,7 @@ class MainForm(npyscreen.Form):
             max_height=6, 
             max_width=30,
             name='Type', 
-            value=[default_mode_number],
+            value=[default_scale_mode_value],
             values=list(Scale.SCALE_DEFINITIONS.keys()),
             begin_entry_at=begin_entry_at,
         )
@@ -288,14 +316,12 @@ class MainForm(npyscreen.Form):
             # max_width=40,
         )
 
-
         # self.new_line_2 = self.add(
         #   npyscreen.TitleFixedText,
         #   max_height=1,
         #   # label=False,
         #   name=' ',
         # )
-
 
         tuning_types = list(Guitar.TUNING_DEFINITIONS.keys())
         self.tuning_selector = self.add(
@@ -329,29 +355,13 @@ class MainForm(npyscreen.Form):
 
         # )
 
-
-
-        # self.grid = self.add(
-        #     npyscreen.GridColTitles, 
-        #     name='GRID',
-
-        #     column_width=10, 
-        #     values=[(1, 2, 3, 4), (10, 20, 30, 40)], 
-        #     col_titles=['A','B', 'C', 'D']
-        # )
-        # # self.grid.when_cursor_moved = curses.beep
-
-
-
-
-
-
         self.max_board_size_x = 100
-        self.max_board_size_y = 7
+        self.max_board_size_y = 8
         self.grid_board = self.add(
             # npyscreen.GridColTitles, 
             # BoxTitleGrid,
             MyGrid,
+            label='Gridboard',
             # column_width=1,
             # columns=board_size_x,
             # row_height=1,
@@ -425,8 +435,8 @@ class App(npyscreen.NPSAppManaged):
             # lines=30,
             lines=50,
             minimum_columns=30,
-            columns=120,
-            # columns=90,
+            # columns=120,
+            columns=90,
             # max_width=100,
         )
 

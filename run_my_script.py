@@ -2,5 +2,5 @@
 
 pushd main
 export PYTHONPATH=$PYTHONPATH:.
-python3 my_test.py
+python3 my_script.py
 popd
