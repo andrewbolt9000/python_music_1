@@ -1,7 +1,7 @@
 # python_music_1
 
 This is a personal project in the **prototype stage**.  
-This project is an opportinity for me to practice coding while creating something useful to me personally.
+This project is an opportinity for me to practice coding while creating a tool that is useful to me personally.
 
 ## Getting started
 This project contains 2 separate projects (for now).
