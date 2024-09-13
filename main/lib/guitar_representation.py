@@ -16,7 +16,7 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
-print(f'{bcolors.WARNING}Warning: No active frommets remain. Continue?{bcolors.ENDC}')
+# print(f'{bcolors.WARNING}Warning: No active frommets remain. Continue?{bcolors.ENDC}')
 # print(bcolors.WARNING + "Warning: No active frommets remain. Continue?" + bcolors.ENDC)
 
 
@@ -198,9 +198,9 @@ class ScaleDegreeNoStringsRepresentationWide(RepresentationInterface):
 class DotsNoStringsRepresentationWide(RepresentationInterface):
 	def found(self, full_name, degree=None):
 		if degree == 1:
-			d = '◎'
-		else:
 			d = '●'
+		else:
+			d = '◉'
 
 		return ' ' + f'{d}'.ljust(2, ' ')
 
@@ -218,7 +218,7 @@ class BasicNoStringsRepresentationUltraWide(RepresentationInterface):
 		
 		name = Note.full_name_to_name(full_name=full_name)
 		if degree == 1:
-			return ' ●' + f'{name}'.ljust(2, ' ')
+			return ' ◉' + f'{name}'.ljust(2, ' ')
 		else:
 			return '  ' + f'{name}'.ljust(2, ' ')
 		# if degree == 1:
@@ -244,7 +244,7 @@ class BasicNoStringsRepresentationWide(RepresentationInterface):
 		
 		name = Note.full_name_to_name(full_name=full_name)
 		if degree == 1:
-			return '●' + f'{name}'.ljust(2, ' ')
+			return '◉' + f'{name}'.ljust(2, ' ')
 		else:
 			return ' ' + f'{name}'.ljust(2, ' ')
 		# if degree == 1:
@@ -273,7 +273,7 @@ class CleanRepresentation(RepresentationInterface):
 			# return '◎'
 		# return '●'
 		# return '⦿'
-		return '◎'
+		return '◉'
 	def not_found(self, full_name=None, degree=None):
 		return ' '
 
@@ -359,9 +359,9 @@ class ColorDegreeEmojiRepresentation(RepresentationInterface):
 class DotsDegreeRepresentationWide(RepresentationInterface):
 	def found(self, full_name, degree=None):
 		if degree == 1:
-			return '⎯⎯●'
+			return '⎯⎯◉'			
 		else:
-			return '⎯⎯⦿'			
+			return '⎯⎯●'
 			# return '●'
 
 	def not_found(self, full_name=None, degree=None):
@@ -379,7 +379,7 @@ class DotsDegreeRepresentationCompact(RepresentationInterface):
 		if degree == 1:
 			return '⎯●'
 		else:
-			return '⎯⦿'			
+			return '⎯◉'			
 			# return '●'
 
 	def not_found(self, full_name=None, degree=None):
@@ -411,8 +411,9 @@ class DotsDegreeRepresentationMicro(RepresentationInterface):
 
 
 GUITAR_REPRESENTATIONS = {
-	"Basic No String Ultra Wide":	BasicNoStringsRepresentationUltraWide,
+	# "Color Test":			NoteRepresentation,
 	"Dots No Strings Wide":	DotsNoStringsRepresentationWide,
+	"Basic No String Ultra Wide":	BasicNoStringsRepresentationUltraWide,
 	"No Strings Wide":		ScaleDegreeNoStringsRepresentationWide,
 	"Basic No String Wide":	BasicNoStringsRepresentationWide,
 	"Dots Wide":			DotsDegreeRepresentationWide,
@@ -429,7 +430,6 @@ GUITAR_REPRESENTATIONS = {
 	"clean arp":			CleanArpRepresentation,
 	# "nameless":				NamelessRepresentation,
 	# "full_name":			FullNameRepresentation,
-	# "note_object":			NoteRepresentation,
 	# "emoji":				EmojiRepresentation,
 	# "degree_emoji":		DegreeEmojiRepresentation,
 	# "color_degree_emoji":	ColorDegreeEmojiRepresentation,

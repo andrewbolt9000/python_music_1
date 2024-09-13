@@ -47,5 +47,8 @@ pip install -r requirements.txt
 - api
 
 
+# Design Pattern examples (To do)
+Factory
+Dependency Injection
 
 
