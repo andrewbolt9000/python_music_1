@@ -1,7 +1,7 @@
 # python_music_1
 
 This is a personal project in the **prototype stage**.  
-This project is an opportinity for me to practice coding while creating a tool that is useful to me personally.
+This project is an opportinity for me to practice coding while creating a tool that is useful to me personally.  The purpose of this tool is to save time by off loading musical computations to the machine and to easily display the results; rather than handwritng every permutation on endless sheets of graph paper.
 
 ## Getting started
 This project contains 2 separate projects (for now).
@@ -14,7 +14,7 @@ From project root, run
 pip install -r requirements.txt
 ./run_tui.py
 ```
-![image info](readme_images/tui_example_1.png)
+![image info](readme_images/demo.gif)
 
 ## Cool things
 - `NoteInterval` has a `%` operator.  Useful for `NoteInterval(semitones=13) % 12`

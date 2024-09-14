@@ -399,6 +399,38 @@ class DotsDegreeRepresentationWide(RepresentationBase):
 		return f' String   ||          3       5       7       9          12          15      17      19      21          24'		
 	
 
+class DotsThirdsRepresentationWide(RepresentationBase):
+	def found(self, full_name, degree=None, relative_single_octave=None,
+			relative_double_octave=None, *args, **kwargs):
+		if (1 + relative_double_octave) % 2:
+			if (relative_single_octave + degree) % 2:
+				if degree == 1:
+					c = self.C_SET[0]
+				else:
+					c = self.C_SET[1]
+			else:
+				c = self.C_SET[2]
+		else:
+			if (relative_single_octave + degree) % 2:
+				if degree == 1:
+					c = self.C_SET[8]	
+				else:			
+					c = self.C_SET[2]
+			else:
+				c = self.C_SET[1]
+		
+		return f'⎯⎯{c}'
+		
+	def not_found(self, full_name=None, degree=None):
+		return '⎯⎯⎯'
+
+	def spacing(self, full_name=None, degree=None):
+		return '┼'
+
+	def guide(self):
+		return f' String   ||          3       5       7       9          12          15      17      19      21          24'		
+	
+
 class DotsDegreeRepresentationCompact(RepresentationBase):
 	def found(self, full_name, degree=None, relative_single_octave=None,
 			relative_double_octave=None, *args, **kwargs):
@@ -492,6 +524,7 @@ GUITAR_REPRESENTATIONS = {
 	"No Strings Wide":		ScaleDegreeNoStringsRepresentationWide,
 	"Basic No String Wide":	BasicNoStringsRepresentationWide,
 	"Dots Wide":			DotsDegreeRepresentationWide,
+	"Dots Thirds Wide":			DotsThirdsRepresentationWide,
 	"Basic Wide":			BasicNameRepresentationWide,
 	"Degree Wide":			ScaleDegreeRepresentationWide,
 	"Full Name Wide":		FullNameRepresentationV2,
