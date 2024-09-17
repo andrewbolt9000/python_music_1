@@ -30,8 +30,10 @@ pip install -r requirements.txt
 
 
 #### Future Features
-- Note naming, (flats)
-- turn into real library which can be installed via `pip`
+- For Version 1.0
+	- Note naming, (flats)
+	- turn into real library which can be installed via `pip`
+	- add save state to TUI
 - Scale - detect scale
 - Chords
 	- detect chord

@@ -4,7 +4,7 @@ from typing import List
 
 from lib.note import Note, NoteInterval
 from lib.scale import Scale
-from lib.guitar_representation import SortedGuitarRepresentationFactory, GuitarRepresentationFactory, SortedGuitarRepresentationHelper
+from lib.guitar_representation import SortedGuitarRepresentationFactory, GuitarRepresentationFactory
 
 
 class Guitar:
@@ -213,9 +213,6 @@ class Guitar:
 			max_fret=None, 
 			return_string=True, 
 			lines_to_list=False, 
-			representation_style='Dots', 
-			representation_sub_style='Micro', 
-			representation_type='degree_debug', 
 			representation=None,
 			top_guide=True,
 			dot_guide=True,
