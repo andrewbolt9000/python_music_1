@@ -6,7 +6,7 @@ from typing import List
 
 
 from lib.guitar import Guitar
-from lib.guitar_representation import GUITAR_REPRESENTATIONS
+from lib.guitar_representation import GUITAR_REPRESENTATIONS, SortedGuitarRepresentationFactory, SortedGuitarRepresentationHelper
 from lib.note import Note, NoteInterval
 from lib.scale import Scale
 
@@ -157,55 +157,35 @@ class MainForm(npyscreen.Form):
                 self.scale_mode.value[0] = 0
 
             self.scale_mode.values = mode_names
-            # self.scale_mode.value = 0
             self.scale_mode.display()
-            # self.fretboard_viewer.display()
-        # if self.scale_key.value:
-        #   self.fretboard_viewer.values = ['test']
 
-        # self.update_fretboard()
+        if len(self.representation_style_selector.value) > 0:
+            representation_style = SortedGuitarRepresentationHelper.styles()[self.representation_style_selector.value[0]]
+            representation_sub_styles = SortedGuitarRepresentationHelper.sub_styles_for_style(style=representation_style)
+
+            # Set default for mode if not enough options for scale type
+            if self.representation_sub_style_selector.value[0] > len(representation_sub_styles) - 1:
+                self.representation_sub_style_selector.value[0] = 0
+
+            self.representation_sub_style_selector.values = representation_sub_styles
+            self.representation_sub_style_selector.display()
+        
+        self.tuning_selector.display()
         self.update_grid_fretboard()
-
-    def update_fretboard(self):
-        if len(self.scale_type.value) > 0 \
-                and len(self.scale_mode.value) > 0 \
-                and len(self.tuning_selector.value) > 0 \
-                and len(self.representation_selector.value) > 0:
-
-            representation_type = list(GUITAR_REPRESENTATIONS.keys())[self.representation_selector.value[0]] 
-
-            tuning_type = list(Guitar.TUNING_DEFINITIONS.keys())[self.tuning_selector.value[0]] 
-
-
-            scale_type = list(Scale.SCALE_DEFINITIONS.keys())[self.scale_type.value[0]]
-            scale_mode_selection = self.scale_mode.value
-            scale_key = Note.NOTE_NAMES_2[int(self.scale_key.value)]
-            if len(scale_mode_selection) > 0:
-                scale_mode = list(Scale.SCALE_DEFINITIONS[scale_type]['mode_names'])[scale_mode_selection[0]]
-                scale = Scale(
-                    root_name=scale_key,
-                    scale_type=scale_type,
-                    mode_name=scale_mode,
-                ) 
-                fretboard = Guitar(scale=scale, tuning=tuning_type)
-                readable_fretboard = fretboard.print_readable_basic(return_string=True, lines_to_list=True, representation_type=representation_type)
-                self.fretboard_viewer.values = readable_fretboard
-                # self.fretboard_viewer.display()
-        self.fretboard_viewer.display()
-
-
-
 
     def update_grid_fretboard(self):
         if len(self.scale_type.value) > 0 \
                 and len(self.scale_mode.value) > 0 \
                 and len(self.tuning_selector.value) > 0 \
-                and len(self.representation_selector.value) > 0:
+                and len(self.representation_style_selector.value) > 0 \
+                and len(self.representation_sub_style_selector.value) > 0:
 
-            representation_type = list(GUITAR_REPRESENTATIONS.keys())[self.representation_selector.value[0]] 
+            representation_style = SortedGuitarRepresentationHelper.styles()[self.representation_style_selector.value[0]]
+            representation_sub_style = SortedGuitarRepresentationHelper.sub_styles_for_style(
+                style=representation_style
+            )[self.representation_sub_style_selector.value[0]]
 
             tuning_type = list(Guitar.TUNING_DEFINITIONS.keys())[self.tuning_selector.value[0]] 
-
 
             scale_type = list(Scale.SCALE_DEFINITIONS.keys())[self.scale_type.value[0]]
             scale_mode_selection = self.scale_mode.value
@@ -218,7 +198,15 @@ class MainForm(npyscreen.Form):
                     mode_name=scale_mode,
                 ) 
                 fretboard = Guitar(scale=scale, tuning=tuning_type)
-                readable_fretboard = fretboard.print_readable_basic(return_string=True, lines_to_list=True, representation_type=representation_type)
+                representation = SortedGuitarRepresentationFactory(style=representation_style, sub_style=representation_sub_style)
+                # readable_fretboard = fretboard.print_readable_basic(return_string=True, lines_to_list=True, representation=representation)
+                readable_fretboard = fretboard.print_readable_basic(
+                    return_string=True, 
+                    lines_to_list=True, 
+                    representation=representation,
+                    # representation_style=representation_style,
+                    # representation_sub_style=representation_sub_style,
+                )
 
                 self.grid_board.values = []
                 dim_y = min([self.max_board_size_y, len(readable_fretboard)])
@@ -228,17 +216,9 @@ class MainForm(npyscreen.Form):
                     for x in range(dim_x - 0): # X
                         row.append(readable_fretboard[y][x])
                     self.grid_board.values.append(row)
+                self.tuning_selector.display()    
                 self.grid_board.display()
                  
-                # self.grid_board.values = []
-                # dim_x = min([self.max_board_size_x, len(readable_fretboard)])
-                # for x in range(dim_x - 0): # Y
-                #     row = []
-                #     dim_y = min([self.max_board_size_y, len(readable_fretboard[x])])
-                #     for y in range(dim_y - 0): # X
-                #         row.append(readable_fretboard[y][x])
-                #     self.grid_board.values.append(row)
-                # self.grid_board.display()
 
     def create(self):
         y, x = self.useable_space()
@@ -299,22 +279,54 @@ class MainForm(npyscreen.Form):
         # )
 
 
-        representation_types = list(GUITAR_REPRESENTATIONS.keys())
-        # representation_types = ['a','v']
-        self.representation_selector = self.add(
+        # representation_types = list(GUITAR_REPRESENTATIONS.keys())
+        # # representation_types = ['a','v']
+        # self.representation_selector = self.add(
+        #     npyscreen.TitleSelectOne, 
+        #     # BoxSelectOne, 
+        #     scroll_exit=True, 
+        #     max_height=7, 
+        #     name='Style', 
+        #     value=[0],
+        #     values=representation_types, 
+        #     # relx=int(x/2),
+        #     begin_entry_at=begin_entry_at,
+        #     rely=2,
+        #     relx=35,
+        #     # max_width=40,
+        # )
+
+        default_rep_style = 0
+        representation_styles = SortedGuitarRepresentationHelper.styles()
+        representation_sub_styles = SortedGuitarRepresentationHelper.sub_styles_for_style(representation_styles[default_rep_style])
+
+        self.representation_style_selector = self.add(
             npyscreen.TitleSelectOne, 
             # BoxSelectOne, 
             scroll_exit=True, 
-            max_height=7, 
+            max_height=10, 
             name='Style', 
-            value=[0],
-            values=representation_types, 
-            # relx=int(x/2),
+            value=[default_rep_style],
+            values=representation_styles, 
             begin_entry_at=begin_entry_at,
             rely=2,
             relx=35,
             # max_width=40,
         )
+
+        self.representation_sub_style_selector = self.add(
+            npyscreen.TitleSelectOne, 
+            # BoxSelectOne, 
+            scroll_exit=True, 
+            max_height=7, 
+            name='Sub Style', 
+            value=[0],
+            values=representation_sub_styles, 
+            begin_entry_at=begin_entry_at,
+            rely=12,
+            relx=35,
+        )
+
 
         # self.new_line_2 = self.add(
         #   npyscreen.TitleFixedText,
@@ -334,7 +346,7 @@ class MainForm(npyscreen.Form):
             values=tuning_types,
             # relx=int(x/2),
             begin_entry_at=begin_entry_at,
-            rely=10,
+            rely=18,
             relx=35,
             # max_width=40,
         )
@@ -355,7 +367,7 @@ class MainForm(npyscreen.Form):
 
         # )
 
-        self.max_board_size_x = 100
+        self.max_board_size_x = 130
         self.max_board_size_y = 8
         self.grid_board = self.add(
             # npyscreen.GridColTitles, 
@@ -375,7 +387,7 @@ class MainForm(npyscreen.Form):
             # rows=board_size_y,
         )
 
-        self.update_grid_fretboard()  
+        self.update_grid_fretboard()
 
 
 class UltraCoolTheme(npyscreen.ThemeManager):
@@ -436,7 +448,7 @@ class App(npyscreen.NPSAppManaged):
             lines=50,
             minimum_columns=30,
             # columns=120,
-            columns=90,
+            columns=120,
             # max_width=100,
         )
 

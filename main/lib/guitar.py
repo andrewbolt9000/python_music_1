@@ -4,7 +4,7 @@ from typing import List
 
 from lib.note import Note, NoteInterval
 from lib.scale import Scale
-from lib.guitar_representation import GuitarRepresentationFactory
+from lib.guitar_representation import SortedGuitarRepresentationFactory, GuitarRepresentationFactory, SortedGuitarRepresentationHelper
 
 
 class Guitar:
@@ -36,12 +36,13 @@ class Guitar:
 		assert tuning.title() in Guitar.TUNING_DEFINITIONS.keys()
 		self._string_tunings = Guitar.TUNING_DEFINITIONS[tuning.title()]
 		self._scale = scale
-		self._scaled_filtered_fretboard = Guitar.tuning_and_scale_to_fretboard(
-			string_tunings=self._string_tunings,
-			scale=self._scale, 
-			max_fret=self._max_fret,
-			representation_type='degree_debug',
-		) 
+		# self._scaled_filtered_fretboard = Guitar.tuning_and_scale_to_fretboard(
+		# 	string_tunings=self._string_tunings,
+		# 	scale=self._scale, 
+		# 	max_fret=self._max_fret,
+		# 	representation=None,
+		# 	# representation_type='degree_debug',
+		# ) 
 
 	@staticmethod 
 	def build_empty_fretboard(string_tunings: List[str], max_fret: int) -> List[List[int]]:
@@ -81,14 +82,15 @@ class Guitar:
 		string_tunings: List[str], 
 		scale: Scale, 
 		max_fret: int,
-		representation_type: str='Full Name Wide', 
+		representation: None
+		# representation_type: str='Full Name Wide', 
 
 	) -> List[List[Note]]:
 
 		# print(f'sts:{string_tunings}')
 
 		# This determins how the string representation will look
-		representation = GuitarRepresentationFactory(representation_type)
+		# representation = GuitarRepresentationFactory(representation_type)
 		
 		# Confirm the interval_recipe is valid
 		assert sum(scale.interval_recipe) == 12
@@ -112,16 +114,34 @@ class Guitar:
 				if fret_note.name in scale.note_names:
 					degree = scale.note_names.index(fret_note.name) + 1
 					dist_from_lowest_root = fret_note - lowest_root
+
 					# For the first two octaves above the lowest root, this will be 0
 					# 
 					double_octave = math.floor(dist_from_lowest_root.semitones / 24)
 					single_octave = math.floor(dist_from_lowest_root.semitones / 12)
+
+
+					# this does not work for 8+ note scales
+					# assert len(scale.note_names) == 7, "this does not work for longer scales probably??"
+					if (dist_from_lowest_root.semitones // 12) % 2 == 1:
+						degree_extension = degree + len(scale.note_names) # this does not work for 8+ note scales
+					else:
+						# ... == 0
+						degree_extension = degree
+
+
+					# if double_octave % 2 == single_octave % 2:
+					# 	degree_extension = degree + len(scale.note_names)
+					# else:
+					# 	degree_extension = degree
+
 					fretboard[string_number].append(
 						representation.found(
 							full_name=fret_note.full_name, 
 							degree=degree,
 							relative_single_octave=single_octave,
 							relative_double_octave=double_octave,
+							degree_extension=degree_extension,
 						)
 					)
 				else:
@@ -193,18 +213,29 @@ class Guitar:
 			max_fret=None, 
 			return_string=True, 
 			lines_to_list=False, 
+			representation_style='Dots', 
+			representation_sub_style='Micro', 
 			representation_type='degree_debug', 
 			representation=None,
 			top_guide=True,
+			dot_guide=True,
 	):
 		readable_max_fret = max_fret if max_fret is None else self._max_fret
 		if representation is None:
-			representation = GuitarRepresentationFactory(representation_type)
+			representation = SortedGuitarRepresentationFactory(
+				style=representation_style, 
+				sub_style=representation_sub_style
+			)
+
+		# representation = SortedGuitarRepresentationFactory.get_representation(
+		# 	style=representation_style, 
+		# 	sub_style=representation_sub_style
+		# )		
 		scaled_filtered_fretboard = Guitar.tuning_and_scale_to_fretboard(
 			string_tunings=self._string_tunings,
 			scale=self._scale, 
 			max_fret=self._max_fret,
-			representation_type=representation_type,
+			representation=representation,
 		)
 
 		readable = []
@@ -228,7 +259,15 @@ class Guitar:
 			readable_line = readable_line + representation.spacing()
 
 			readable.append(readable_line)
-	
+
+		if dot_guide:
+			try:
+				# Fret number dot guide
+				readable.append(representation.dot_guide())
+			except AttributeError:
+				# No dot_guide() for this representation.  Just skip.
+				pass
+
 		if not lines_to_list:
 			readable = '\n'.join(readable)
 
