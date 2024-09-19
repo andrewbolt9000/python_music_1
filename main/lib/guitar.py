@@ -4,7 +4,7 @@ from typing import List
 
 from lib.note import Note, NoteInterval
 from lib.scale import Scale
-from lib.guitar_representation import SortedGuitarRepresentationFactory, GuitarRepresentationFactory
+from lib.guitar_representation import SortedGuitarRepresentationFactory
 
 
 class Guitar:
@@ -51,13 +51,13 @@ class Guitar:
 			fretboard.append([0 for fret in range(0, max_fret)])
 		return fretboard
 
-	@property
-	def fretboard(self, tuning: List[str]):
-		if self._fretboard is None:
-			self._fretboard = []
+	# @property
+	# def fretboard(self, tuning: List[str]):
+	# 	if self._fretboard is None:
+	# 		self._fretboard = []
 
-		##############################################
-		return self._fretboard
+	# 	##############################################
+	# 	return self._fretboard
 	
 	@staticmethod
 	def tuning_and_scale_to_fretboard_of_degree(string_tunings: List[str], max_fret: int) -> List[List[int]]:
@@ -82,16 +82,9 @@ class Guitar:
 		string_tunings: List[str], 
 		scale: Scale, 
 		max_fret: int,
-		representation: None
-		# representation_type: str='Full Name Wide', 
-
+		representation: str,
 	) -> List[List[Note]]:
 
-		# print(f'sts:{string_tunings}')
-
-		# This determins how the string representation will look
-		# representation = GuitarRepresentationFactory(representation_type)
-		
 		# Confirm the interval_recipe is valid
 		assert sum(scale.interval_recipe) == 12
 		
@@ -167,40 +160,7 @@ class Guitar:
 					fretboard[string_number].append(None)
 			
 		return fretboard	
-				
 
-	@staticmethod
-	def tuning_and_scale_to_fretboard_of_notes_OLD(string_tunings: List[str], scale: Scale, max_fret: int) -> List[List[Note]]:
-		# print(f'sts:{string_tunings}')
-		assert sum(scale.interval_recipe) == 12
-		fretboard = []
-		for string_tuning in string_tunings:
-			print(f'st:{string_tuning}')
-
-			string_name = Note.full_name_to_name(string_tuning)
-
-			print('string_name')
-			print(string_name)
-
-			scale_degree_index = None
-			for fret in range(0, max_fret):
-				fret_note = Note()
-				if fret == 0:
-					pass 
-
-
-				# if string_tuning
-				if scale_degree_index is None:
-					# No reference point to scale
-					string_in_scale = scale.note_names.index(string_name)
-					print(f'found string {string_in_scale}')
-					scale_degree_index = scale.note_nam
-					# exit()
-				else:
-					pass
-			
-		return fretboard
-				
 	@staticmethod
 	def string_number_human_readable(computer_number: int, total_strings: int=6):
 		return total_strings - computer_number
@@ -221,10 +181,6 @@ class Guitar:
 				sub_style=representation_sub_style
 			)
 
-		# representation = SortedGuitarRepresentationFactory.get_representation(
-		# 	style=representation_style, 
-		# 	sub_style=representation_sub_style
-		# )		
 		scaled_filtered_fretboard = Guitar.tuning_and_scale_to_fretboard(
 			string_tunings=self._string_tunings,
 			scale=self._scale, 

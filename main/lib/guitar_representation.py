@@ -4,21 +4,6 @@ import math
 from typing import List
 from lib.note import Note, NoteInterval
 from lib.scale import Scale
-# from lib.guitar_representation import GuitarRepresentationFactory
-
-
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-# print(f'{bcolors.WARNING}Warning: No active frommets remain. Continue?{bcolors.ENDC}')
-# print(bcolors.WARNING + "Warning: No active frommets remain. Continue?" + bcolors.ENDC)
 
 
 class AdjustableRepresentation:
@@ -146,21 +131,6 @@ class RepresentationBase:
 			else:
 				guide_line = guide_line + f'{mark}'.ljust(self.dot_offset[1], ' ').rjust(self.width+1, ' ')
 		return guide_line
-
-
-class NoteRepresentation(RepresentationBase):
-	def found(self, full_name, degree=None, relative_single_octave=None,
-			relative_double_octave=None, *args, **kwargs):
-		return Note(full_name=full_name)
-
-	def not_found(self, full_name=None, degree=None):
-		return '⎯⎯'
-
-	def spacing(self, full_name=None, degree=None):
-		return '┼'
-	
-	def guide(self):
-		return f' String  ||      {bcolors.OKCYAN}3      5      7      9       12     15   17   19   21     24{bcolors.ENDC}'		
 
 
 class FullNameRepresentation(RepresentationBase):
@@ -1049,60 +1019,59 @@ class DegreeExtensionRepresentationWide3(AdjustableRepresentation):
 
 SORTED_GUITAR_REPRESENTATIONS = {
 	'Basic': {
-		"Basic":			BasicNameRepresentationWide,
-		"No String":	BasicNoStringsRepresentationWide,
+		"Basic":				BasicNameRepresentationWide,
+		"No String":			BasicNoStringsRepresentationWide,
 		"Basic Compact":		BasicNameRepresentation,
-		"No String Compact":		NoStringNameRepresentation,
+		"No String Compact":	NoStringNameRepresentation,
 	},
 	'Dots': {
 		"Dots Wide":			DotsDegreeRepresentationWide,
-		"No String":	DotsNoStringsRepresentationWide,
+		"No String":			DotsNoStringsRepresentationWide,
 		"Dots Compact":			DotsDegreeRepresentationCompact,
 		"Arp Micro":			ArpDotsDegreeRepresentationMicro,
 		"Arp7 Micro":			Arp7DotsDegreeRepresentationMicro,
-		"Minimalist":				CleanRepresentation,
+		"Minimalist":			CleanRepresentation,
 
 	},
 	'Degree': {
-		"Standard":			ScaleDegreeRepresentationStandard,
-		"No String" :		ScaleDegreeNoStringsRepresentationWide,
-		"Compact":			ScaleDegreeRepresentationCompact,
-		"Wide":			ScaleDegreeRepresentationWide,
+		"Standard":				ScaleDegreeRepresentationStandard,
+		"No String" :			ScaleDegreeNoStringsRepresentationWide,
+		"Compact":				ScaleDegreeRepresentationCompact,
+		"Wide":					ScaleDegreeRepresentationWide,
 		"Extension 1":			ExtensionRepresentation,
 		"Extension 2":			ExtensionRepresentationOctaveUp,
-		"Extension Compact":			ExtensionRepresentationCompact,
+		"Extension Compact":	ExtensionRepresentationCompact,
 		"No String Ext 1" :		ScaleDegreeNoStringsExtension1RepresentationWide,
 		"No String Ext 2" :		ScaleDegreeNoStringsExtension2RepresentationWide,
-		"Ext Both Compact":			ExtensionRepresentationBothCompact,
-		"Ext Both Wide":			ExtensionRepresentationBothWide,
-		"Degree Micro":				ScaleDegreeRepresentation,
+		"Ext Both Compact":		ExtensionRepresentationBothCompact,
+		"Ext Both Wide":		ExtensionRepresentationBothWide,
+		"Degree Micro":			ScaleDegreeRepresentation,
 		"Minimalist":			ScaleDegreeMinimalistRepresentation,
 	},
 	'Thirds': {
 		"Extension 1":			ThirdsExtensionRepresentation,
 		"Extension 2":			ThirdsExtensionOctaveUpRepresentation,
-		"Dots Thirds Wide":			DotsThirdsRepresentationWide,
+		"Dots Thirds Wide":		DotsThirdsRepresentationWide,
 
-		"Extension Wide":	DegreeExtensionRepresentationWide,
-		"Extension Wide2":	DegreeExtensionRepresentationWide2,
-		"Arp Micro":	ArpDotsDegreeRepresentationMicro,
+		"Extension Wide":		DegreeExtensionRepresentationWide,
+		"Extension Wide2":		DegreeExtensionRepresentationWide2,
+		"Arp Micro":			ArpDotsDegreeRepresentationMicro,
 		"Arp7 Micro":			Arp7DotsDegreeRepresentationMicro,
 	},
 	'No Strings': {
-		"Dots":	DotsNoStringsRepresentationWide,
-		"Degree" :		ScaleDegreeNoStringsRepresentationWide,
-		"Letter Wide":	BasicNoStringsRepresentationWide,
+		"Dots":					DotsNoStringsRepresentationWide,
+		"Degree" :				ScaleDegreeNoStringsRepresentationWide,
+		"Letter Wide":			BasicNoStringsRepresentationWide,
 		"Letter Ultra Wide":	BasicNoStringsRepresentationUltraWide,
 	},
 	'Full Name': {
 		"Full Name Wide":		FullNameRepresentationWide,
-		"Full Name":		FullNameRepresentation,
+		"Full Name":			FullNameRepresentation,
 	},
 	'Clean': {
 		"clean":				CleanRepresentation,
 		"clean arp":			CleanArpRepresentation,
 	},	
-
 }
 
 class SortedGuitarRepresentationFactory:
@@ -1126,35 +1095,3 @@ class SortedGuitarRepresentationFactory:
 	# @staticmethod
 	# def all_substyles():
 	# 	pass
-
-
-GUITAR_REPRESENTATIONS = {
-	# "Color Test":			NoteRepresentation,
-	# "Extension Wide3":	DegreeExtensionRepresentationWide3,
-	"Extension Wide2":	DegreeExtensionRepresentationWide2,
-	"Extension Wide":	DegreeExtensionRepresentationWide,
-	# "Dots Degree":	DotsDegreeRepresentationMicro,
-	"Dots No Strings Wide":	DotsNoStringsRepresentationWide,
-	"Basic No String Ultra Wide":	BasicNoStringsRepresentationUltraWide,
-	"No Strings Wide":		ScaleDegreeNoStringsRepresentationWide,
-	"Basic No String Wide":	BasicNoStringsRepresentationWide,
-	"Dots Wide":			DotsDegreeRepresentationWide,
-	"Dots Thirds Wide":			DotsThirdsRepresentationWide,
-	"Basic Wide":			BasicNameRepresentationWide,
-	"Degree Wide":			ScaleDegreeRepresentationWide,
-	"Full Name Wide":		FullNameRepresentation,
-	"Dots Compact":			DotsDegreeRepresentationCompact,
-	"Basic Compact":		BasicNameRepresentation,
-	# "Dots Micro":			DotsDegreeRepresentationMicro,
-	"Degree":				ScaleDegreeRepresentation,
-	"degree_debug":			ScaleDegreeMinimalistRepresentation,
-	"clean":				CleanRepresentation,
-	"clean arp":			CleanArpRepresentation,
-	# "nameless":				NamelessRepresentation,
-	# "full_name":			FullNameRepresentation,
-	# "emoji":				EmojiRepresentation,
-	# "degree_emoji":		DegreeEmojiRepresentation,
-	# "color_degree_emoji":	ColorDegreeEmojiRepresentation,
-}
-def GuitarRepresentationFactory(representation_type):
-	return GUITAR_REPRESENTATIONS[representation_type]()
