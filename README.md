@@ -8,15 +8,15 @@ This project contains 2 separate projects (for now).
 `./main/lib/` contains a library of object useful for music computations.
 `./main/tui/` contains a hacked together text ui for exploring the capablities of the library.  
 ### Launching Text User Interface (Unix)
-From project root, run
 
-Set up virtual environment (Suggested)
+Set up virtual environment (Suggested):
 ```
 python -m venv venv
 source venv/bin/activate
 ```
 
 Install required libraries.  Run Text UI. 
+From project root, run:
 ```
 pip install -r requirements.txt
 ./run_tui.py
