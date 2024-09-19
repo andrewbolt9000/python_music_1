@@ -500,14 +500,14 @@ class ColorDegreeEmojiRepresentation(RepresentationBase):
 	def spacing(self, full_name=None, degree=None):
 		return '⎯'
 
-class DotsDegreeRepresentationWide(RepresentationBase):
+class DotsDegreeRepresentationWide(AdjustableRepresentation):
+	width = 3
 	def found(self, full_name, degree=None, relative_single_octave=None,
 			relative_double_octave=None, *args, **kwargs):
 		if degree == 1:
-			return '⎯⎯◉'			
-		else:
 			return '⎯⎯●'
-			# return '●'
+		else:
+			return '⎯⎯◉'			
 
 	def not_found(self, full_name=None, degree=None):
 		return '⎯⎯⎯'
@@ -753,7 +753,7 @@ class Arp7DotsDegreeRepresentationMicro(RepresentationBase):
 	def guide(self):
 		return f' String       3   5   7   9     12    15  17  19  21    24'		
 
-class DegreeExtensionRepresentationWide(RepresentationBase):
+class DegreeExtensionRepresentationWide(AdjustableRepresentation):
 	width = 4
 
 	def found(self, full_name, degree_extension=None, degree=None, relative_single_octave=None,
@@ -776,22 +776,9 @@ class DegreeExtensionRepresentationWide(RepresentationBase):
 	def spacing(self, full_name=None, degree=None):
 		return '┼'
 
-	def guide(self):
-		marked_frets = [3, 5, 7, 9, 12, 15, 17, 19, 21, 24]
-		guide_line = f'String      || '
-		for x in range(1, 24):
 
-			if x in marked_frets:
-				mark = x
-			else:
-				mark = '.'
-				# mark = x
-			guide_line = guide_line + f'{x}'.ljust(3, '-').rjust(self.width+1, '_')
-		return guide_line
-
-
-class DegreeExtensionRepresentationWide2(RepresentationBase):
-	width = 4
+class ThirdDotsRepresentationCompact(AdjustableRepresentation):
+	width = 3
 	def found(self, full_name, degree_extension=None, degree=None, relative_single_octave=None,
 			relative_double_octave=None, *args, **kwargs):
 		if degree_extension % 2 == 1:
@@ -801,59 +788,34 @@ class DegreeExtensionRepresentationWide2(RepresentationBase):
 				c = self.C_SET[1]
 		else:
 			if degree == 1:
-				c = self.C_SET[7]			
+				c = self.C_SET[8]			
 			else:
-				c = self.C_SET[5]
+				c = self.C_SET[3]
 		return f'{c}'.ljust(2, '⎯').rjust(self.width, '⎯')
+
 	def not_found(self, full_name=None, degree=None):
 		return ''.ljust(self.width, '⎯')
 
 	def spacing(self, full_name=None, degree=None):
 		return '┼'
 
-	def guide(self):
-		marked_frets = [3, 5, 7, 9, 12, 15, 17, 19, 21, 24]
-		guide_line = f' String    || '
-		for x in range(1, 24):
 
-			if x in marked_frets:
-				mark = x
-			else:
-				mark = '.'
-				# mark = x
-			guide_line = guide_line + f'{x}'.ljust(3, '-').rjust(self.width+1, '_')
-		return guide_line
-
-
-class DegreeExtensionRepresentationWide3(AdjustableRepresentation):
-
-	width =3
-	offset = width - 3
-
-
-	def __init__(self):
-		try:
-			self.dot_offset = self.DOT_OFFSET_MAP[self.width]
-			# self.dot_offset = self.DOT_OFFSET_MAP_LR[self.width]
-			# self.dot_offset = self.DOT_OFFSET_MAP_RL[self.width]
-		except ValueError:
-			self.dot_offset = math.ceil(width / 2) + 1
-			raise ValueError
-
-	def found(self, full_name, degree_extension=None, degree=None, relative_single_octave=None,
+class ThirdDotsRepresentationCompactOctaveUp(AdjustableRepresentation):
+	width = 3
+	def found(self, full_name, degree_extension_octave_up=None, degree_extension=None, degree=None, relative_single_octave=None,
 			relative_double_octave=None, *args, **kwargs):
-		if degree_extension % 2 == 0:
+		if degree_extension_octave_up % 2 == 1:
 			if degree == 1:
 				c = self.C_SET[0]
 			else:
 				c = self.C_SET[1]
 		else:
 			if degree == 1:
-				c = self.C_SET[7]
+				c = self.C_SET[8]			
 			else:
-				c = self.C_SET[5]
-
+				c = self.C_SET[3]
 		return f'{c}'.ljust(2, '⎯').rjust(self.width, '⎯')
+
 	def not_found(self, full_name=None, degree=None):
 		return ''.ljust(self.width, '⎯')
 
@@ -896,9 +858,9 @@ SORTED_GUITAR_REPRESENTATIONS = {
 		"Extension 1":			ThirdsExtensionRepresentation,
 		"Extension 2":			ThirdsExtensionOctaveUpRepresentation,
 		"Dots Thirds Wide":		DotsThirdsRepresentationWide,
-
-		"Extension Wide":		DegreeExtensionRepresentationWide,
-		"Extension Wide2":		DegreeExtensionRepresentationWide2,
+		"Ext Dots":				DegreeExtensionRepresentationWide,
+		"Ext Dot Comp 1":		ThirdDotsRepresentationCompact,
+		"Ext Dot Comp 2":		ThirdDotsRepresentationCompactOctaveUp,
 		"Arp Micro":			ArpDotsDegreeRepresentationMicro,
 		"Arp7 Micro":			Arp7DotsDegreeRepresentationMicro,
 	},
