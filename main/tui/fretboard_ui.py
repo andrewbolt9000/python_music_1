@@ -4,7 +4,7 @@ from typing import List
 import npyscreen
 
 from lib.guitar import Guitar
-from lib.guitar_representation import GUITAR_REPRESENTATIONS, SortedGuitarRepresentationFactory
+from lib.guitar_representation import SortedGuitarRepresentationFactory
 from lib.note import Note, NoteInterval
 from lib.scale import Scale
 
@@ -31,7 +31,6 @@ class MyGrid(npyscreen.GridColTitles):
     # a cell is printed. In this example we change the color of the
     # text depending on the string value of cell.
     def custom_print_cell(self, actual_cell, cell_display_value):
-
 
         # Color mapping - maps to theme
 
