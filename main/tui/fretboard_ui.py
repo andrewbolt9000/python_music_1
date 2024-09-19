@@ -53,6 +53,8 @@ class MyGrid(npyscreen.GridColTitles):
     # a cell is printed. In this example we change the color of the
     # text depending on the string value of cell.
     def custom_print_cell(self, actual_cell, cell_display_value):
+
+
         # Color mapping - maps to theme
 
         # 'DEFAULT'     : 'WHITE_BLACK',
@@ -83,9 +85,19 @@ class MyGrid(npyscreen.GridColTitles):
         color_string = 'DANGER'
         color_def = 'DEFAULT'
 
+        # Color top row (guide) red
+        if type(actual_cell.grid_current_value_index) is tuple \
+                and actual_cell.grid_current_value_index[0] == 0:
+            actual_cell.color = color_e 
+            return
+        # Color string names red
+        if type(actual_cell.grid_current_value_index) is tuple \
+                and actual_cell.grid_current_value_index[1] < 6:
+            actual_cell.color = color_e 
+            return            
+
         if cell_display_value == u'◘':
            actual_cell.color = color_a
-
         elif cell_display_value == 'R':
            actual_cell.color = color_a
         elif cell_display_value == u'●':
@@ -97,6 +109,10 @@ class MyGrid(npyscreen.GridColTitles):
         elif cell_display_value == u'◎':
            actual_cell.color = color_d
         elif cell_display_value == u'✪':
+           actual_cell.color = color_e
+
+        # Fretboard navigation dots.
+        elif cell_display_value == u'.':
            actual_cell.color = color_e
 
         elif cell_display_value == u'⎔':
@@ -113,7 +129,9 @@ class MyGrid(npyscreen.GridColTitles):
         elif cell_display_value == u'◼︎':
            actual_cell.color = color_d
 
-        elif cell_display_value in (u'▸', u'▶︎', u'►', u'▼', u'◼︎', u'🁢'):
+        elif cell_display_value == u'▸':
+           actual_cell.color = color_a
+        elif cell_display_value in (u'▶︎', u'►', u'▼', u'◼︎', u'🁢'):
             actual_cell.color = color_b
         elif cell_display_value == u'▼':
            actual_cell.color = color_b
@@ -122,7 +140,7 @@ class MyGrid(npyscreen.GridColTitles):
         elif cell_display_value == u'▶︎':
            actual_cell.color = color_b
 
-
+        # Strings / Frets
         elif cell_display_value == u'|':
            actual_cell.color = color_string
         elif cell_display_value == u'⎯':
@@ -326,10 +344,10 @@ class MainForm(npyscreen.Form):
             npyscreen.TitleSelectOne, 
             # BoxSelectOne, 
             scroll_exit=True, 
-            max_height=9, 
-            name='Sub Style', 
+            max_height=9,
+            name='Sub Style',
             value=[0],
-            values=representation_sub_styles, 
+            values=representation_sub_styles,
             begin_entry_at=begin_entry_at,
             rely=11,
             relx=35,

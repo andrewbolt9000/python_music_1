@@ -22,6 +22,7 @@ class bcolors:
 
 
 class AdjustableRepresentation:
+	C_SET = '◘●◉⦿◎✪⎔▸▶︎►▼◼︎🁢'
 	width =3
 	# offset = 3
 	# offset = math.ceil(width / 2)
@@ -31,7 +32,7 @@ class AdjustableRepresentation:
 	DOT_OFFSET_MAP = [
 			(0, 1), 
 			(1, 1),
-			(1, 0),
+			(2, 3), # good
 			(3, 3),
 			(3, 4),
 			(4, 4), # 5
@@ -55,19 +56,19 @@ class AdjustableRepresentation:
 
 	def found(self, full_name, degree=None, relative_single_octave=None,
 			relative_double_octave=None, *args, **kwargs):
-		return None
+		assert False, 'found() method should be overridden'
 
 	def not_found(self, full_name=None, degree=None):
-		return None
+		assert False, 'not_found() method should be overridden'
 
 	def spacing(self, full_name=None, degree=None):
-		return None
+		assert False, 'spacing() method should be overridden'
 
 	# WORKING
 	def guide(self):
 		marked_frets = [3, 5, 7, 9, 12, 15, 17, 19, 21, 24]
-		guide_line = f'String' + ''.ljust(self.width+1, ' ') + '||'
-		for x in range(1, 24):
+		guide_line = f' String' + ''.ljust(self.width, ' ') + '||'
+		for x in range(1, 25):
 			if x in marked_frets:
 				mark = x
 			else:
@@ -75,17 +76,12 @@ class AdjustableRepresentation:
 				# mark = x
 			guide_line = guide_line + f'{mark}'.ljust(2, ' ').rjust(self.width+1, ' ')
 		return guide_line
-		# default_guide = f'String        3   5   7   9     12    15  17  19  21    24'		
-		# return f' String   ||          3       5       7       9          12          15      17      19      21          24'		
-	
-
 
 	def dot_guide(self):
 		marked_frets = [3, 5, 7, 9, 12, 15, 17, 19, 21, 24]
 		double_marked_frets = [12, 24]
 		guide_line = f'      ' + ' '.ljust(self.width+1, ' ') + '||'
-		for x in range(1, 24):
-
+		for x in range(1, 25):
 			if False or x in marked_frets:
 				if x in double_marked_frets:
 					mark = '..'
@@ -100,106 +96,10 @@ class AdjustableRepresentation:
 		return guide_line
 
 
-
-class DegreeExtensionRepresentationWide3(AdjustableRepresentation):
-	width =3
-	# offset = 3
-	# offset = math.ceil(width / 2)
-	offset = width - 3
-
-	# Use this for now.  Figure out function later...
-	DOT_OFFSET_MAP = [
-			(0, 1), 
-			(1, 1),
-			(1, 0),
-			(3, 3),
-			(3, 4),
-			(4, 4), # 5
-			(4, 5),
-			(5, 5),
-			(5, 6),
-			(6, 6),
-			(6, 7), # 10
-	]
-
-
-	def __init__(self):
-		try:
-			self.dot_offset = self.DOT_OFFSET_MAP[self.width]
-			# self.dot_offset = self.DOT_OFFSET_MAP_LR[self.width]
-			# self.dot_offset = self.DOT_OFFSET_MAP_RL[self.width]
-		except ValueError:
-			self.dot_offset = math.ceil(width / 2) + 1
-			raise ValueError
-
-	def found(self, full_name, degree_extension=None, degree=None, relative_single_octave=None,
-			relative_double_octave=None, *args, **kwargs):
-		if degree_extension % 2 == 0:
-			if degree == 1:
-				c = self.C_SET[0]
-			else:
-				c = self.C_SET[1]
-		else:
-			if degree == 1:
-				c = self.C_SET[7]
-			else:
-				c = self.C_SET[5]
-
-		return f'{c}'.ljust(2, '⎯').rjust(self.width, '⎯')
-	def not_found(self, full_name=None, degree=None):
-		return ''.ljust(self.width, '⎯')
-
-	def spacing(self, full_name=None, degree=None):
-		return '┼'
-
-	def guide(self):
-		marked_frets = [3, 5, 7, 9, 12, 15, 17, 19, 21, 24]
-		double_marked_frets = [7, 12, 19, 24]
-		guide_line = f' String ' + '#'.ljust(self.width+1, '*')
-		for x in range(1, 24):
-
-			if False or x in marked_frets:
-				if x in double_marked_frets:
-					mark = '..'
-				else:
-					mark = '.'
-			else:
-				# mark = ' '
-				mark = x
-			guide_line = guide_line + f'{mark}'.rjust(self.offset, '-').ljust(self.width+1, '_')
-
-		return guide_line
-
-
-		return f' String   ||          3       5       7       9          12          15      17      19      21          24'		
-
-
-	# WORKING
-	def guide2(self):
-		marked_frets = [3, 5, 7, 9, 12, 15, 17, 19, 21, 24]
-		guide_line = f' String    ||'
-		for x in range(1, 24):
-
-			if x in marked_frets:
-				mark = x
-			else:
-				mark = ' '
-				# mark = x
-			guide_line = guide_line + f'{mark}'.ljust(2, ' ').rjust(self.width+1, ' ')
-
-		return guide_line
-
-
-		return f' String   ||          3       5       7       9          12          15      17      19      21          24'		
-	
-
-
-
-
-
 class RepresentationBase:
 	#        0123456789
 	C_SET = '◘●◉⦿◎✪⎔▸▶︎►▼◼︎🁢'
+
     # color_a = 'DEFAULT' # WHITE   0
     # color_a = 'DEFAULT' # WHITE   1
     # color_b = 'CURSOR'  # CYAN    2
@@ -337,7 +237,7 @@ class BasicNameRepresentationWide(RepresentationBase):
 		return '┼'
 
 	def guide(self):
-		return f' String  ||           3       5       7       9          12          15      17      19      21          24'		
+		return f' String   ||          3       5       7       9          12          15      17      19      21          24'		
 	
 
 
@@ -379,7 +279,8 @@ class ScaleDegreeRepresentation(RepresentationBase):
 	def guide(self):
 		return f'String        3   5   7   9    12    15  17  19  21    24'
 
-class ScaleDegreeRepresentationStandard(RepresentationBase):
+class ScaleDegreeRepresentationStandard(AdjustableRepresentation):
+	width = 3
 	def found(self, full_name, degree=None, relative_single_octave=None,
 			relative_double_octave=None, *args, **kwargs):
 		if degree == 1:
@@ -395,11 +296,9 @@ class ScaleDegreeRepresentationStandard(RepresentationBase):
 	def spacing(self, full_name=None, degree=None):
 		return '┼'
 
-	def guide(self):
-		return f' String  ||           3       5       7       9          12          15      17      19      21          24'		
 
-
-class ScaleDegreeRepresentationCompact(RepresentationBase):
+class ScaleDegreeRepresentationCompact(AdjustableRepresentation):
+	width = 2
 	def found(self, full_name, degree=None, relative_single_octave=None,
 			relative_double_octave=None, *args, **kwargs):
 		if degree == 1:
@@ -415,11 +314,9 @@ class ScaleDegreeRepresentationCompact(RepresentationBase):
 	def spacing(self, full_name=None, degree=None):
 		return '┼'
 
-	def guide(self):
-		return f' String  ||           3       5       7       9          12          15      17      19      21          24'		
 
-
-class ScaleDegreeRepresentationWide(RepresentationBase):
+class ScaleDegreeRepresentationWide(AdjustableRepresentation):
+	width = 4
 	def found(self, full_name, degree=None, relative_single_octave=None,
 			relative_double_octave=None, *args, **kwargs):
 		if degree == 1:
@@ -435,12 +332,9 @@ class ScaleDegreeRepresentationWide(RepresentationBase):
 	def spacing(self, full_name=None, degree=None):
 		return '┼'
 
-	def guide(self):
-		return f' String  ||           3       5       7       9          12          15      17      19      21          24'		
 
-
-
-class ScaleDegreeNoStringsRepresentationWide(RepresentationBase):
+class ScaleDegreeNoStringsRepresentationWide(AdjustableRepresentation):
+	width = 3
 	def found(self, full_name, degree=None, relative_single_octave=None,
 			relative_double_octave=None, *args, **kwargs):
 		if degree == 1:
@@ -456,8 +350,42 @@ class ScaleDegreeNoStringsRepresentationWide(RepresentationBase):
 	def spacing(self, full_name=None, degree=None):
 		return '|'
 
-	def guide(self):
-		return f' String   ||          3       5       7       9          12          15      17      19      21          24'		
+class ScaleDegreeNoStringsExtension1RepresentationWide(AdjustableRepresentation):
+	width = 3
+	def found(self, full_name, degree=None, relative_single_octave=None,
+			degree_extension=None, degree_extension_octave_up=None,
+			relative_double_octave=None, *args, **kwargs):
+		if degree == 1:
+			d = '●'
+		else:
+			d = degree_extension
+		return ' ' + f'{d}'.ljust(2, ' ')
+	def not_found(self, full_name=None, degree=None):
+		return '   '
+
+	def spacing(self, full_name=None, degree=None):
+		return '|'
+
+class ScaleDegreeNoStringsExtension2RepresentationWide(AdjustableRepresentation):
+	width = 3
+	def found(self, full_name, degree=None,
+		degree_extension=None, degree_extension_octave_up=None,
+		*args, **kwargs):
+		if degree == 1:
+			d = '●'
+		else:
+			d = degree_extension_octave_up
+
+		return ' ' + f'{d}'.ljust(2, ' ')
+
+	def not_found(self, full_name=None, degree=None):
+		return '   '
+
+	def spacing(self, full_name=None, degree=None):
+		return '|'
+
+	# def guide(self):
+	# 	return f' String   ||          3       5       7       9          12          15      17      19      21          24'		
 class DotsNoStringsRepresentationWide(RepresentationBase):
 	def found(self, full_name, degree=None, relative_single_octave=None,
 			relative_double_octave=None, *args, **kwargs):
@@ -504,7 +432,8 @@ class BasicNoStringsRepresentationUltraWide(RepresentationBase):
 
 
 
-class BasicNoStringsRepresentationWide(RepresentationBase):
+class BasicNoStringsRepresentationWide(AdjustableRepresentation):
+	width = 3
 	def found(self, full_name, degree=None, relative_single_octave=None,
 			relative_double_octave=None, *args, **kwargs):
 		
@@ -525,10 +454,6 @@ class BasicNoStringsRepresentationWide(RepresentationBase):
 
 	def spacing(self, full_name=None, degree=None):
 		return '|'
-
-	def guide(self):
-		return f' String   ||          3       5       7       9          12          15      17      19      21          24'		
-
 
 
 class CleanRepresentation(RepresentationBase):
@@ -647,7 +572,6 @@ class DotsDegreeRepresentationWide(RepresentationBase):
 	def guide(self):
 		return f' String   ||          3       5       7       9          12          15      17      19      21          24'		
 	
-
 class DotsThirdsRepresentationWide(RepresentationBase):
 	def found(self, full_name, degree=None, relative_single_octave=None,
 			relative_double_octave=None, *args, **kwargs):
@@ -685,10 +609,12 @@ class ExtensionRepresentation(AdjustableRepresentation):
 
 	def found(self, full_name, degree=None, relative_single_octave=None,
 			relative_double_octave=None, degree_extension=None, *args, **kwargs):
-		mark = ''
 		if degree == 1:
-			mark = mark + '●'
-		mark = mark + '⎯' + str(degree_extension)
+			mark = '●'
+		else:
+			mark = str(degree_extension)
+		mark = mark.rjust(3, '⎯').ljust(4, '⎯') 
+		return mark
 		# if (1 + relative_double_octave) % 2:
 		# 	if (relative_single_octave + degree) % 2:
 		# 		if degree == 1:
@@ -705,7 +631,6 @@ class ExtensionRepresentation(AdjustableRepresentation):
 		# 			c = self.C_SET[2]
 		# 	else:
 		# 		c = self.C_SET[1]
-		return f'{mark}'.rjust(3, '⎯').ljust(4, '⎯')
 		
 	def not_found(self, full_name=None, degree=None):
 		return '⎯⎯⎯⎯'
@@ -716,9 +641,178 @@ class ExtensionRepresentation(AdjustableRepresentation):
 	# def guide(self):
 	# 	return f' String   ||          3       5       7       9          12          15      17      19      21          24'		
 	
+class ExtensionRepresentationOctaveUp(AdjustableRepresentation):
+	width = 4
+
+	def found(self, full_name, degree=None, relative_single_octave=None,
+			relative_double_octave=None, degree_extension=None, 
+			degree_extension_octave_up=None, *args, **kwargs):
+		if degree == 1:
+			mark = '●'
+		else:
+			mark = str(degree_extension_octave_up)
+		mark = mark.rjust(3, '⎯').ljust(4, '⎯') 
+		return mark
+		# if (1 + relative_double_octave) % 2:
+		# 	if (relative_single_octave + degree) % 2:
+		# 		if degree == 1:
+		# 			c = self.C_SET[0]
+		# 		else:
+		# 			c = self.C_SET[1]
+		# 	else:
+		# 		c = self.C_SET[2]
+		# else:
+		# 	if (relative_single_octave + degree) % 2:
+		# 		if degree == 1:
+		# 			c = self.C_SET[8]	
+		# 		else:			
+		# 			c = self.C_SET[2]
+		# 	else:
+		# 		c = self.C_SET[1]
+
+		return f'{mark}'.rjust(3, '⎯').ljust(4, '⎯')
+		
+	def not_found(self, full_name=None, degree=None):
+		return '⎯⎯⎯⎯'
+
+	def spacing(self, full_name=None, degree=None):
+		return '┼'
+
+	# def guide(self):
+	# 	return f' String   ||          3       5       7       9          12          15      17      19      21          24'		
+		
+class ThirdsExtensionRepresentation(AdjustableRepresentation):
+	width = 4
+	def found(self, full_name, degree=None, relative_single_octave=None,
+			relative_double_octave=None, degree_extension=None, 
+			degree_extension_octave_up=None, *args, **kwargs):
+		if degree == 1 and degree_extension == 1:
+			mark = 'R'
+		elif degree == 1 and degree_extension != 1:
+			mark = self.C_SET[7]
+		elif degree_extension % 2 == 0:
+			mark = self.C_SET[3]
+		else:
+			mark = str(degree_extension)
+		mark = mark.rjust(3, '⎯').ljust(4, '⎯') 
+		return mark
+		
+	def not_found(self, full_name=None, degree=None):
+		return '⎯⎯⎯⎯'
+
+	def spacing(self, full_name=None, degree=None):
+		return '┼'
+
+class ThirdsExtensionOctaveUpRepresentation(AdjustableRepresentation):
+	width = 4
+	def found(self, full_name, degree=None, relative_single_octave=None,
+			relative_double_octave=None, degree_extension=None, 
+			degree_extension_octave_up=None, *args, **kwargs):
+		if degree == 1 and degree_extension_octave_up == 1:
+			mark = 'R'
+		elif degree == 1 and degree_extension_octave_up != 1:
+			mark = self.C_SET[7]
+		elif degree_extension_octave_up % 2 == 0:
+			mark = self.C_SET[3]
+		else:
+			mark = str(degree_extension_octave_up)
+		mark = mark.rjust(3, '⎯').ljust(4, '⎯') 
+		return mark
+		
+	def not_found(self, full_name=None, degree=None):
+		return '⎯⎯⎯⎯'
+
+	def spacing(self, full_name=None, degree=None):
+		return '┼'
+
+class ExtensionRepresentationBothCompact(AdjustableRepresentation):
+	width = 5
+
+	def found(self, full_name, degree=None, relative_single_octave=None,
+			relative_double_octave=None, degree_extension=None, 
+			degree_extension_octave_up=None, *args, **kwargs):
+		line = ''
+		if degree == 1:
+			return '⎯⎯R⎯⎯'
+		else:
+			mark = str(degree_extension)
+
+		line = str(degree_extension).ljust(2, '⎯') + '⎯' + str(degree_extension_octave_up).rjust(2, '⎯')
+		return line
+		# if (1 + relative_double_octave) % 2:
+		# 	if (relative_single_octave + degree) % 2:
+		# 		if degree == 1:
+		# 			c = self.C_SET[0]
+		# 		else:
+		# 			c = self.C_SET[1]
+		# 	else:
+		# 		c = self.C_SET[2]
+		# else:
+		# 	if (relative_single_octave + degree) % 2:
+		# 		if degree == 1:
+		# 			c = self.C_SET[8]	
+		# 		else:			
+		# 			c = self.C_SET[2]
+		# 	else:
+		# 		c = self.C_SET[1]
+
+		# return f'{mark}'.rjust(3, '⎯').ljust(4, '⎯')
+		
+	def not_found(self, full_name=None, degree=None):
+		return '⎯⎯⎯⎯⎯'
+
+	def spacing(self, full_name=None, degree=None):
+		return '┼'
+
+	# def guide(self):
+	# 	return f' String   ||          3       5       7       9          12          15      17      19      21          24'		
+	
+class ExtensionRepresentationBothWide(AdjustableRepresentation):
+	width = 7
+
+	def found(self, full_name, degree=None, relative_single_octave=None,
+			relative_double_octave=None, degree_extension=None, 
+			degree_extension_octave_up=None, *args, **kwargs):
+
+		mark = '⎯' + str(degree_extension).ljust(2, '⎯')
+		if degree == 1:
+			mark = mark + '●'
+		else:
+			mark = mark + '⎯'
+
+		mark = mark + (str(degree_extension_octave_up).rjust(2, '⎯')) + '⎯'
+		return mark
+		# if (1 + relative_double_octave) % 2:
+		# 	if (relative_single_octave + degree) % 2:
+		# 		if degree == 1:
+		# 			c = self.C_SET[0]
+		# 		else:
+		# 			c = self.C_SET[1]
+		# 	else:
+		# 		c = self.C_SET[2]
+		# else:
+		# 	if (relative_single_octave + degree) % 2:
+		# 		if degree == 1:
+		# 			c = self.C_SET[8]	
+		# 		else:			
+		# 			c = self.C_SET[2]
+		# 	else:
+		# 		c = self.C_SET[1]
+
+		# return f'{mark}'.rjust(3, '⎯').ljust(4, '⎯')
+		
+	def not_found(self, full_name=None, degree=None):
+		return '⎯⎯⎯⎯⎯⎯⎯'
+
+	def spacing(self, full_name=None, degree=None):
+		return '┼'
+
+	# def guide(self):
+	# 	return f' String   ||          3       5       7       9          12          15      17      19      21          24'		
+	
 
 class ExtensionRepresentationCompact(AdjustableRepresentation):
-	width = 3
+	width = 2
 	def found(self, full_name, degree=None, relative_single_octave=None,
 			relative_double_octave=None, degree_extension=None, *args, **kwargs):
 		mark = ''
@@ -749,8 +843,8 @@ class ExtensionRepresentationCompact(AdjustableRepresentation):
 	def spacing(self, full_name=None, degree=None):
 		return '┼'
 
-	def guide(self):
-		return f' String   ||          3       5       7       9          12          15      17      19      21          24'		
+	# def guide(self):
+	# 	return f' String   ||          3       5       7       9          12          15      17      19      21          24'		
 	
 
 class DotsDegreeRepresentationCompact(RepresentationBase):
@@ -844,7 +938,7 @@ class DegreeExtensionRepresentationWide(RepresentationBase):
 				c = self.C_SET[1]
 		else:
 			if degree == 1:
-				c = self.C_SET[7]			
+				c = self.C_SET[8]			
 			else:
 				c = self.C_SET[2]
 
@@ -914,23 +1008,51 @@ class DegreeExtensionRepresentationWide2(RepresentationBase):
 
 		return f' String   ||          3       5       7       9          12          15      17      19      21          24'		
 
+
+
+class DegreeExtensionRepresentationWide3(AdjustableRepresentation):
+
+	width =3
+	offset = width - 3
+
+
+	def __init__(self):
+		try:
+			self.dot_offset = self.DOT_OFFSET_MAP[self.width]
+			# self.dot_offset = self.DOT_OFFSET_MAP_LR[self.width]
+			# self.dot_offset = self.DOT_OFFSET_MAP_RL[self.width]
+		except ValueError:
+			self.dot_offset = math.ceil(width / 2) + 1
+			raise ValueError
+
+	def found(self, full_name, degree_extension=None, degree=None, relative_single_octave=None,
+			relative_double_octave=None, *args, **kwargs):
+		if degree_extension % 2 == 0:
+			if degree == 1:
+				c = self.C_SET[0]
+			else:
+				c = self.C_SET[1]
+		else:
+			if degree == 1:
+				c = self.C_SET[7]
+			else:
+				c = self.C_SET[5]
+
+		return f'{c}'.ljust(2, '⎯').rjust(self.width, '⎯')
+	def not_found(self, full_name=None, degree=None):
+		return ''.ljust(self.width, '⎯')
+
+	def spacing(self, full_name=None, degree=None):
+		return '┼'
+
+
+
 SORTED_GUITAR_REPRESENTATIONS = {
-	'Degree': {
-		"Extension":			ExtensionRepresentation,
-		"Extension Compact":			ExtensionRepresentationCompact,
-		"Wide":			ScaleDegreeRepresentationWide,
-		"Standard":			ScaleDegreeRepresentationStandard,
-		"No String" :		ScaleDegreeNoStringsRepresentationWide,
-		"Compact":			ScaleDegreeRepresentationCompact,
-		"Degree Micro":				ScaleDegreeRepresentation,
-		"Minimalist":			ScaleDegreeMinimalistRepresentation,
-	},
-	'Dot Thirds': {
-		"Dots Thirds Wide":			DotsThirdsRepresentationWide,
-		"Extension Wide":	DegreeExtensionRepresentationWide,
-		"Extension Wide2":	DegreeExtensionRepresentationWide2,
-		"Arp Micro":	ArpDotsDegreeRepresentationMicro,
-		"Arp7 Micro":			Arp7DotsDegreeRepresentationMicro,
+	'Basic': {
+		"Basic":			BasicNameRepresentationWide,
+		"No String":	BasicNoStringsRepresentationWide,
+		"Basic Compact":		BasicNameRepresentation,
+		"No String Compact":		NoStringNameRepresentation,
 	},
 	'Dots': {
 		"Dots Wide":			DotsDegreeRepresentationWide,
@@ -941,9 +1063,30 @@ SORTED_GUITAR_REPRESENTATIONS = {
 		"Minimalist":				CleanRepresentation,
 
 	},
-	'Full Name': {
-		"Full Name Wide":		FullNameRepresentationWide,
-		"Full Name":		FullNameRepresentation,
+	'Degree': {
+		"Standard":			ScaleDegreeRepresentationStandard,
+		"No String" :		ScaleDegreeNoStringsRepresentationWide,
+		"Compact":			ScaleDegreeRepresentationCompact,
+		"Wide":			ScaleDegreeRepresentationWide,
+		"Extension 1":			ExtensionRepresentation,
+		"Extension 2":			ExtensionRepresentationOctaveUp,
+		"Extension Compact":			ExtensionRepresentationCompact,
+		"No String Ext 1" :		ScaleDegreeNoStringsExtension1RepresentationWide,
+		"No String Ext 2" :		ScaleDegreeNoStringsExtension2RepresentationWide,
+		"Ext Both Compact":			ExtensionRepresentationBothCompact,
+		"Ext Both Wide":			ExtensionRepresentationBothWide,
+		"Degree Micro":				ScaleDegreeRepresentation,
+		"Minimalist":			ScaleDegreeMinimalistRepresentation,
+	},
+	'Thirds': {
+		"Extension 1":			ThirdsExtensionRepresentation,
+		"Extension 2":			ThirdsExtensionOctaveUpRepresentation,
+		"Dots Thirds Wide":			DotsThirdsRepresentationWide,
+
+		"Extension Wide":	DegreeExtensionRepresentationWide,
+		"Extension Wide2":	DegreeExtensionRepresentationWide2,
+		"Arp Micro":	ArpDotsDegreeRepresentationMicro,
+		"Arp7 Micro":			Arp7DotsDegreeRepresentationMicro,
 	},
 	'No Strings': {
 		"Dots":	DotsNoStringsRepresentationWide,
@@ -951,13 +1094,10 @@ SORTED_GUITAR_REPRESENTATIONS = {
 		"Letter Wide":	BasicNoStringsRepresentationWide,
 		"Letter Ultra Wide":	BasicNoStringsRepresentationUltraWide,
 	},
-	'Basic': {
-		"Basic":			BasicNameRepresentationWide,
-		"No String":	BasicNoStringsRepresentationWide,
-		"Basic Compact":		BasicNameRepresentation,
-		"No String Compact":		NoStringNameRepresentation,
+	'Full Name': {
+		"Full Name Wide":		FullNameRepresentationWide,
+		"Full Name":		FullNameRepresentation,
 	},
-
 	'Clean': {
 		"clean":				CleanRepresentation,
 		"clean arp":			CleanArpRepresentation,

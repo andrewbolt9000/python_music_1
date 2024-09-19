@@ -16,6 +16,12 @@ pip install -r requirements.txt
 ```
 ![image info](readme_images/demo.gif)
 
+**Usage Tips:**
+- Use `up-arrow` and `down-arrow` keys to navegate. 
+- `space-bar` to make a selection.
+- Also use `Mouse` to navigate, and `space-bar` to select.
+
+
 ## Cool things
 - `NoteInterval` has a `%` operator.  Useful for `NoteInterval(semitones=13) % 12`
 - Arithetic with `Note` and `NoteInterval`
@@ -24,6 +30,8 @@ pip install -r requirements.txt
 ## Road Map
 
 ### Library
+- `Chord` class
+- Generic `Scale` filters
 
 #### Completed
 - Classes: `Note`, `NoteInterval`, `Scale`, `Guitar`
@@ -34,10 +42,13 @@ pip install -r requirements.txt
 	- Note naming, (flats)
 	- turn into real library which can be installed via `pip`
 	- add save state to TUI
+- Filter Scales. Filter Scales by Chords.
 - Scale - detect scale
 - Chords
 	- detect chord
 - Doc comments
+- Extend Scale to undersand extensions.
+- Fretboard render uses `Notes` and their properties, (which means `Notes` would need `self.root_note`; which raises the question whether notes exist with in a tonal context??  Maybe `Scales` shoule really be made of `NoteIntervals`??  or `ScaleNote`?  We want an extened `Note` class which knows what key+scale and therfore what names it should be using for each note.)
 
 ### TUI Viewer
 

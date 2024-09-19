@@ -125,15 +125,11 @@ class Guitar:
 					# assert len(scale.note_names) == 7, "this does not work for longer scales probably??"
 					if (dist_from_lowest_root.semitones // 12) % 2 == 1:
 						degree_extension = degree + len(scale.note_names) # this does not work for 8+ note scales
+						degree_extension_octave_up = degree
 					else:
 						# ... == 0
 						degree_extension = degree
-
-
-					# if double_octave % 2 == single_octave % 2:
-					# 	degree_extension = degree + len(scale.note_names)
-					# else:
-					# 	degree_extension = degree
+						degree_extension_octave_up = degree + len(scale.note_names)
 
 					fretboard[string_number].append(
 						representation.found(
@@ -142,6 +138,7 @@ class Guitar:
 							relative_single_octave=single_octave,
 							relative_double_octave=double_octave,
 							degree_extension=degree_extension,
+							degree_extension_octave_up=degree_extension_octave_up,
 						)
 					)
 				else:
