@@ -7,7 +7,6 @@ from lib.note import Note, NoteInterval, NoteError
 
 class TestNote:
 
-
 	def test_note_full_name(self):
 		testee = Note(full_name='C1')
 		assert testee.name == 'C'
@@ -198,10 +197,4 @@ class TestNoteInterval:
 		# Combine with name param
 		result = NoteInterval(name='13') % 12
 		assert result.name == 'major 2'
-
-
-
-
-
-
 

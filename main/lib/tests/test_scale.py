@@ -74,17 +74,3 @@ class TestScale:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-

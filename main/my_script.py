@@ -1,3 +1,5 @@
+# JUNK SCRIPT FOR SKETCHING AND TESTING
+
 
 from lib.guitar import Guitar
 from lib.guitar_representation import GUITAR_REPRESENTATIONS
