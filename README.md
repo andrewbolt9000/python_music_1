@@ -16,7 +16,7 @@ python -m venv venv
 source venv/bin/activate
 ```
 
-Install required libraries.  Run Text UI.
+Install required libraries.  Run Text UI. 
 ```
 pip install -r requirements.txt
 ./run_tui.py
