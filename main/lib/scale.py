@@ -3,14 +3,11 @@
 from lib.note import Note, NoteInterval
 
 
-
-
 class ScaleError(Exception):
 	def __init__(self, message, errors=None):            
 		# Call the base class constructor with the parameters it needs
 		super().__init__(message)
 		   
-
 
 class Scale(object):
 	"""docstring for Scale"""
@@ -169,7 +166,6 @@ class Scale(object):
 	}
 	SCALE_TYPES = list(SCALE_DEFINITIONS)
 
-
 	_interval_recipe = None
 	_note_names = None
 	_alternate_name = None
@@ -199,7 +195,6 @@ class Scale(object):
 			alternate_name = ''
 		return f'<Scale {self.root_name} {self.mode_name.title()}{alternate_name}>'
 
-
 	def __str__(self):
 		if self.alternate_name is not None:
 			alternate_name = f' ({self.alternate_name.title()})'
@@ -224,7 +219,7 @@ class Scale(object):
 				scale_type=self.scale_type,
 			)
 		return self._interval_recipe
-	
+
 	
 	@property
 	def note_names(self):
@@ -237,7 +232,6 @@ class Scale(object):
 				note = root_note + NoteInterval(semitones=cumulative_interval)
 				self._note_names = self._note_names + [note.name]
 		return self._note_names
-
 
 	@staticmethod
 	def scale_name_to_interval_recipe(root_name, mode_name, scale_type):
@@ -254,8 +248,6 @@ class Scale(object):
 		# ... meaning the program is wrong not the user.
 		assert sum(interval_recipe) == 12, f'Not 12.  Was {sum(interval_recipe)}'
 		return interval_recipe
-
-
 
 	@staticmethod
 	def note_names_to_interval_recipe(root_name, note_names):
@@ -279,31 +271,3 @@ class Scale(object):
 			interval_recipe.append(delta)
 		interval_recipe.append(12 - last_interval)
 		return interval_recipe
-
-
-	# @staticmethod
-	# def notes_to_interval_recipe(root_note, notes):
-	# 	# measure all note intervals from root
-	# 	intervals_relative_to_root = []
-	# 	for note in notes:
-	# 		interval = note - root_note
-	# 		intervals_relative_to_root.add(interval.semitones % 12)
-
-
-	# 	# analyse intervals 
-	# 	intervals = list(set(intervals))
-	# 	intervals.sort()
-		
-
-	# 	return dict(root_name=root_note.name,
-	# 		interval_recipe=intervals,
-	# 		type=Scale.DIATONIC_TYPE,
-	# 		mode=Scale.)
-
-
-
-
-	def notes_to_scale(notes):
-		self._root = None 
-
-
