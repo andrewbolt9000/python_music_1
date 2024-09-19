@@ -36,13 +36,6 @@ class Guitar:
 		assert tuning.title() in Guitar.TUNING_DEFINITIONS.keys()
 		self._string_tunings = Guitar.TUNING_DEFINITIONS[tuning.title()]
 		self._scale = scale
-		# self._scaled_filtered_fretboard = Guitar.tuning_and_scale_to_fretboard(
-		# 	string_tunings=self._string_tunings,
-		# 	scale=self._scale, 
-		# 	max_fret=self._max_fret,
-		# 	representation=None,
-		# 	# representation_type='degree_debug',
-		# ) 
 
 	@staticmethod 
 	def build_empty_fretboard(string_tunings: List[str], max_fret: int) -> List[List[int]]:
@@ -51,14 +44,6 @@ class Guitar:
 			fretboard.append([0 for fret in range(0, max_fret)])
 		return fretboard
 
-	# @property
-	# def fretboard(self, tuning: List[str]):
-	# 	if self._fretboard is None:
-	# 		self._fretboard = []
-
-	# 	##############################################
-	# 	return self._fretboard
-	
 	@staticmethod
 	def tuning_and_scale_to_fretboard_of_degree(string_tunings: List[str], max_fret: int) -> List[List[int]]:
 		pass	
@@ -141,7 +126,6 @@ class Guitar:
 			
 		return fretboard	
 				
-
 
 	# Deprecated??????
 	@staticmethod
