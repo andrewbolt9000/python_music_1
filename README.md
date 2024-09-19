@@ -7,9 +7,16 @@ This project is an opportinity for me to practice coding while creating a tool t
 This project contains 2 separate projects (for now).
 `./main/lib/` contains a library of object useful for music computations.
 `./main/tui/` contains a hacked together text ui for exploring the capablities of the library.  
-### Launching Text User Interface
+### Launching Text User Interface (Unix)
 From project root, run
 
+Set up virtual environment (Suggested)
+```
+python -m venv venv
+source venv/bin/activate
+```
+
+Install required libraries.  Run Text UI. 
 ```
 pip install -r requirements.txt
 ./run_tui.py
