@@ -1,3 +1,4 @@
+import json
 import random
 from typing import List
 
@@ -108,14 +109,14 @@ class MyGrid(npyscreen.GridColTitles):
 
         elif cell_display_value == u'▸':
            actual_cell.color = color_a
-        elif cell_display_value in (u'▶︎', u'►', u'▼', u'◼︎', u'🁢'):
-            actual_cell.color = color_b
         elif cell_display_value == u'▼':
-           actual_cell.color = color_b
+           actual_cell.color = color_e
         elif cell_display_value == u'►':
            actual_cell.color = color_b
         elif cell_display_value == u'▶︎':
            actual_cell.color = color_b
+        # elif cell_display_value in (u'▶︎', u'►', u'▼', u'◼︎', u'🁢'):
+        #     actual_cell.color = color_b
 
         # Strings / Frets
         elif cell_display_value == u'|':
@@ -127,17 +128,68 @@ class MyGrid(npyscreen.GridColTitles):
         else:
            actual_cell.color = color_b
 
+class SavedForm(npyscreen.Popup):
+    def create(self):
+        y, x = self.useable_space()
+        self.shortcut_text = self.add(
+            npyscreen.FixedText,
+            value='CONFIGURATION SAVED',
+            relx=x-27,
+            rely=y-4,
+        )    
+
+    def on_ok(self):
+        self.parentApp.switchForm('MAIN')
+
+    def afterEditing(self):
+        # self.save_user_settings()
+        self.parentApp.switchForm('MAIN')
+
+
 
 class MainForm(npyscreen.Form):
+    user_settings_path = './user_settings.json'
+    DEFAULT_SAVE_INSTRUCTIONS = '^S to save configuration'
+    DEFAULT_EXIT_INSTRUCTIONS = '^C to exit'
+
+
+    # def on_cancel(self):
+        # self.parentApp.switchForm(None)
+
+    # def on_ok(self):
+        # Exit the application if the OK button is pressed.
+        # self.parent.parentApp.switchForm(None)
+        # self.parentApp.switchForm(None)
+
+    def save_user_settings(self, *args, **kwargs): 
+        with open(self.user_settings_path, 'w') as file:
+            new_user_settings = {
+                'scale_type':  self.scale_type.value[0],
+                'scale_mode':  self.scale_mode.value[0],
+                'scale_key':  self.scale_key.value,
+                'representation_style_selector':  self.representation_style_selector.value[0],
+                'representation_sub_style_selector':  self.representation_sub_style_selector.value[0],
+                'tuning_selector':  self.tuning_selector.value[0],
+            }
+            json_string = json.dumps(new_user_settings, default=lambda o: o.__dict__, sort_keys=True, indent=2)
+            file.write(json_string)    
+        self.shortcut_text.value = '      SAVED'
+        self.shortcut_text.display()
+        self.parentApp.switchForm('SAVED')
+
+
     def afterEditing(self):
-        self.parentApp.setNextForm(None)
-    
+        self.save_user_settings()
+        self.parentApp.switchForm('SAVED')
+
     def while_editing(self, arg):
         # self.update_fretboard()
         self.representation_sub_style_selector.display()
-        self.update_grid_fretboard()
+        # self.update_grid_fretboard()
 
     def adjust_widgets(self):
+        # self.parentApp.switchForm(None)
+        # exit()
         if len(self.scale_type.value) > 0:
             scale_type = list(Scale.SCALE_DEFINITIONS.keys())[self.scale_type.value[0]]
             mode_names = Scale.SCALE_DEFINITIONS[scale_type]['mode_names']
@@ -166,6 +218,8 @@ class MainForm(npyscreen.Form):
         self.representation_sub_style_selector.display()        
         self.tuning_selector.display()
         self.update_grid_fretboard()
+        self.shortcut_text.value = self.DEFAULT_SAVE_INSTRUCTIONS
+
 
     def update_grid_fretboard(self):
         if len(self.scale_type.value) > 0 \
@@ -213,13 +267,34 @@ class MainForm(npyscreen.Form):
                     self.grid_board.values.append(row)
                 self.tuning_selector.display()    
                 self.grid_board.display()
-                 
+
+                self.shortcut_text.display()
+                self.exit_text.display()
+
     def create(self):
+        # Load settings
+        try:
+            with open(self.user_settings_path, 'r') as file:
+                # json_string = file.read()
+                user_settings = json.load(file)
+                self.user_settings = user_settings
+                # self.user_settings = None
+        except FileNotFoundError:
+            # Defaults
+            self.user_settings = {
+                'scale_type':  0,
+                'scale_mode':  0,
+                'scale_key':  9, # A
+                'representation_style_selector':  0,
+                'representation_sub_style_selector':  0,
+                'tuning_selector':  0,
+            }
+
         y, x = self.useable_space()
 
         begin_entry_at = 7 #  Label width
-        default_scale_mode_value = 0
-        default_mode = list(Scale.SCALE_DEFINITIONS.keys())[default_scale_mode_value]
+
+        default_mode = list(Scale.SCALE_DEFINITIONS.keys())[self.user_settings['scale_mode']]
         self.scale_type = self.add(
             npyscreen.TitleSelectOne, 
             scroll_exit=True, 
@@ -228,7 +303,7 @@ class MainForm(npyscreen.Form):
             max_height=6, 
             max_width=30,
             name='Type', 
-            value=[default_scale_mode_value],
+            value=[self.user_settings['scale_type']],
             values=list(Scale.SCALE_DEFINITIONS.keys()),
             begin_entry_at=begin_entry_at,
         )
@@ -240,7 +315,7 @@ class MainForm(npyscreen.Form):
             max_height=8, 
             max_width=30,
             name='Mode', 
-            value=[0],
+            value=[self.user_settings['scale_mode']],
             values=scale_modes,
             # relx=int(x/2),
             begin_entry_at=begin_entry_at,
@@ -256,14 +331,17 @@ class MainForm(npyscreen.Form):
             max_width=23,
             max_height=3,
             height=4,
-            value=9,
+            value=self.user_settings['scale_key'],
             # use_two_lines=True,
             begin_entry_at=begin_entry_at,
         )
 
-        default_rep_style = 0
         representation_styles = SortedGuitarRepresentationFactory.styles()
-        representation_sub_styles = SortedGuitarRepresentationFactory.sub_styles_for_style(representation_styles[default_rep_style])
+        representation_sub_styles = SortedGuitarRepresentationFactory.sub_styles_for_style(
+            representation_styles[
+                self.user_settings['representation_sub_style_selector']
+            ]
+        )
 
         self.representation_style_selector = self.add(
             npyscreen.TitleSelectOne, 
@@ -271,11 +349,11 @@ class MainForm(npyscreen.Form):
             scroll_exit=True, 
             max_height=9, 
             name='Style Category', 
-            value=[default_rep_style],
+            value=[self.user_settings['representation_style_selector']],
             values=representation_styles, 
             begin_entry_at=begin_entry_at,
             rely=2,
-            relx=35,
+            relx=33,
             max_width=25,
         )
 
@@ -285,11 +363,11 @@ class MainForm(npyscreen.Form):
             scroll_exit=True, 
             max_height=9,
             name='Sub Style',
-            value=[0],
+            value=[self.user_settings['representation_sub_style_selector']],
             values=representation_sub_styles,
             begin_entry_at=begin_entry_at,
             rely=11,
-            relx=35,
+            relx=33,
         )
 
         tuning_types = list(Guitar.TUNING_DEFINITIONS.keys())
@@ -299,13 +377,11 @@ class MainForm(npyscreen.Form):
             scroll_exit=True,
             max_height=7,
             name='Tuning',
-            value=[0],
+            value=[self.user_settings['tuning_selector']],
             values=tuning_types,
-            # relx=int(x/2),
             begin_entry_at=begin_entry_at,
             rely=2,
-            relx=68,
-            # max_width=40,
+            relx=60,
         )
         
         self.max_board_size_x = 130
@@ -314,12 +390,31 @@ class MainForm(npyscreen.Form):
             MyGrid,
             label='Gridboard',
             scroll_exit=True,            
+            exit_left=True, 
+            exit_right=True,            
+            exit_top=True,
+            exit_bottom=True,
             column_width=1,
             col_margin=0,
             rely=20,
         )
 
+        self.shortcut_text = self.add(
+            npyscreen.FixedText,
+            value=self.DEFAULT_SAVE_INSTRUCTIONS,
+            relx=x-27,
+            rely=y-5,
+        )
+        self.exit_text = self.add(
+            npyscreen.FixedText,
+            value=self.DEFAULT_EXIT_INSTRUCTIONS,
+            relx=x-27,
+            rely=y-4,
+        )
         self.update_grid_fretboard()
+
+        self.add_handlers({"^S": self.save_user_settings})
+
 
 
 class UltraCoolTheme(npyscreen.ThemeManager):
@@ -371,18 +466,28 @@ class App(npyscreen.NPSAppManaged):
         npyscreen.setTheme(UltraCoolTheme)
         # npyscreen.setTheme(DefaultTheme)
         # npyscreen.setTheme(npyscreen.Themes.ColorfulTheme)
-        self.addForm(
+        form = self.addForm(
             'MAIN', 
             MainForm, 
-            name='ASCII Guitar Scales',
+            name='Fretboard Computer',
             # minimum_lines=20,
-            # lines=30,
-            lines=50,
-            minimum_columns=30,
+            lines=46,
+            max_lines=50,
+            minimum_columns=25,
             # columns=120,
-            columns=120,
+            max_columns=160,
             # max_width=100,
         )
+        save_form = self.addForm(
+            'SAVED',
+            SavedForm,
+            lines=46,
+            max_lines=50,
+            minimum_columns=30,
+            # columns=120,
+            max_columns=160,            
+        )
+
 
 if __name__ == '__main__':
     FretboardApp = App().run()

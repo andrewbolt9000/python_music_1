@@ -776,6 +776,194 @@ class DegreeExtensionRepresentationWide(AdjustableRepresentation):
 	def spacing(self, full_name=None, degree=None):
 		return '┼'
 
+ 
+class DotExtensionRepresentationWide(AdjustableRepresentation):
+	width = 3
+
+	def found(self, full_name, degree_extension=None, degree=None, relative_single_octave=None,
+			relative_double_octave=None, *args, **kwargs):
+		if degree_extension % 2 == 1:
+			if degree == 1:
+				c = self.C_SET[0]
+			else:
+				c = self.C_SET[1]
+		else:
+			if degree == 1:
+				c = self.C_SET[8]		
+			else:
+				c = self.C_SET[2]
+
+		return f'{c}'.ljust(2, ' ').rjust(self.width, ' ')
+	def not_found(self, full_name=None, degree=None):
+		return ''.ljust(self.width, ' ')
+
+	def spacing(self, full_name=None, degree=None):
+		return '|'
+
+	def guide(self, *args, **kwargs):
+		return f' String   ||         3       5       7       9           12          15      17      19      21          24                              '
+
+
+class DotThrid1ExtensionRepresentationWide(AdjustableRepresentation):
+	width = 3
+
+	def found(self, full_name, degree_extension=None, degree=None, relative_single_octave=None,
+			relative_double_octave=None, *args, **kwargs):
+		if degree_extension % 2 == 1:
+			if degree == 1:
+				c = self.C_SET[0]
+			else:
+				c = self.C_SET[1]
+		else:
+			if degree == 1:
+				c = self.C_SET[11]		
+			else:
+				c = self.C_SET[3]
+
+		return f'{c}'.ljust(2, ' ').rjust(self.width, ' ')
+	def not_found(self, full_name=None, degree=None):
+		return ''.ljust(self.width, ' ')
+
+	def spacing(self, full_name=None, degree=None):
+		return '|'
+
+	def guide(self, *args, **kwargs):
+		return f' String   ||         3       5       7       9           12          15      17      19      21          24                              '
+
+
+class DotThrid2ExtensionRepresentationWide(AdjustableRepresentation):
+	width = 3
+
+	def found(self, full_name, degree_extension=None, degree=None, relative_single_octave=None,
+			relative_double_octave=None, *args, **kwargs):
+		if degree_extension % 2 == 0:
+			if degree == 1:
+				c = self.C_SET[0]
+			else:
+				c = self.C_SET[1]
+		else:
+			if degree == 1:
+				c = self.C_SET[11]		
+			else:
+				c = self.C_SET[3]
+
+		return f'{c}'.ljust(2, ' ').rjust(self.width, ' ')
+	def not_found(self, full_name=None, degree=None):
+		return ''.ljust(self.width, ' ')
+
+	def spacing(self, full_name=None, degree=None):
+		return '|'
+
+	def guide(self, *args, **kwargs):
+		return f' String   ||         3       5       7       9           12          15      17      19      21          24                              '
+
+class NoSDotThrid1RepresentationWide(AdjustableRepresentation):
+	width = 3
+
+	def found(self, full_name, degree_extension=None, degree=None, relative_single_octave=None,
+			relative_double_octave=None, *args, **kwargs):
+		if degree_extension % 2 == 1:
+			if degree == 1:
+				c = self.C_SET[0]
+			else:
+				c = self.C_SET[1]
+		else:
+			c = ' '
+			# if degree == 1:
+			# 	c = self.C_SET[11]		
+			# else:
+			# 	c = self.C_SET[3]
+
+		return f'{c}'.ljust(2, ' ').rjust(self.width, ' ')
+	def not_found(self, full_name=None, degree=None):
+		return ''.ljust(self.width, ' ')
+
+	def spacing(self, full_name=None, degree=None):
+		return '|'
+
+	def guide(self, *args, **kwargs):
+		return f' String   ||         3       5       7       9           12          15      17      19      21          24                              '
+
+class NoSDotThrid2RepresentationWide(AdjustableRepresentation):
+	width = 3
+
+	def found(self, full_name, degree_extension=None, degree=None, relative_single_octave=None,
+			relative_double_octave=None, *args, **kwargs):
+		if degree_extension % 2 == 0:
+			if degree == 1:
+				c = self.C_SET[0]
+			else:
+				c = self.C_SET[1]
+		else:
+			c = ' '
+			# if degree == 1:
+			# 	c = self.C_SET[11]		
+			# else:
+			# 	c = self.C_SET[3]
+
+		return f'{c}'.ljust(2, ' ').rjust(self.width, ' ')
+	def not_found(self, full_name=None, degree=None):
+		return ''.ljust(self.width, ' ')
+
+	def spacing(self, full_name=None, degree=None):
+		return '|'
+
+	def guide(self, *args, **kwargs):
+		return f' String   ||         3       5       7       9           12          15      17      19      21          24                              '
+
+class NoSDotThrid1RepresentationMicro(AdjustableRepresentation):
+	width = 1
+
+	def found(self, full_name, degree_extension=None, degree=None, relative_single_octave=None,
+			relative_double_octave=None, *args, **kwargs):
+		if degree_extension % 2 == 1:
+			if degree == 1:
+				c = self.C_SET[0]
+			else:
+				c = self.C_SET[1]
+		else:
+			# c = ' '
+			if degree == 1:
+				c = self.C_SET[11]		
+			else:
+				c = self.C_SET[3]
+
+		return f'{c}'
+	def not_found(self, full_name=None, degree=None):
+		return ''.ljust(self.width, ' ')
+
+	def spacing(self, full_name=None, degree=None):
+		return ' '
+
+	# def guide(self, *args, **kwargs):
+	# 	return f' String   ||         3       5       7       9           12          15      17      19      21          24                              '
+
+class NoSDotThrid2RepresentationMicro(AdjustableRepresentation):
+	width = 1
+
+	def found(self, full_name, degree_extension=None, degree=None, relative_single_octave=None,
+			relative_double_octave=None, *args, **kwargs):
+		if degree_extension % 2 == 0:
+			if degree == 1:
+				c = self.C_SET[0]
+			else:
+				c = self.C_SET[1]
+		else:
+			# c = ' '
+			if degree == 1:
+				c = self.C_SET[11]		
+			else:
+				c = self.C_SET[3]
+
+		return f'{c}'
+	def not_found(self, full_name=None, degree=None):
+		return ''.ljust(self.width, ' ')
+
+	def spacing(self, full_name=None, degree=None):
+		return ' '
+
+	# def guide(self, *args, **kwargs):
+	# 	return f' String   ||         3       5       7       9           12          15      17      19      21          24                              '
 
 class ThirdDotsRepresentationCompact(AdjustableRepresentation):
 	width = 3
@@ -855,10 +1043,16 @@ SORTED_GUITAR_REPRESENTATIONS = {
 		"Minimalist":			ScaleDegreeMinimalistRepresentation,
 	},
 	'Thirds': {
+		"NoS Ext Dots":			DotExtensionRepresentationWide,
+		"NoS Dots 1":			NoSDotThrid1RepresentationWide,
+		"NoS Dots 2":			NoSDotThrid2RepresentationWide,
+		"NoS Ext Dots 1":		DotThrid1ExtensionRepresentationWide,
+		"NoS Ext Dots 2":		DotThrid2ExtensionRepresentationWide,
 		"Extension 1":			ThirdsExtensionRepresentation,
 		"Extension 2":			ThirdsExtensionOctaveUpRepresentation,
 		"Dots Thirds Wide":		DotsThirdsRepresentationWide,
 		"Ext Dots":				DegreeExtensionRepresentationWide,
+		"NoS Ext Dots":			DotExtensionRepresentationWide,
 		"Ext Dot Comp 1":		ThirdDotsRepresentationCompact,
 		"Ext Dot Comp 2":		ThirdDotsRepresentationCompactOctaveUp,
 		"Arp Micro":			ArpDotsDegreeRepresentationMicro,
@@ -869,6 +1063,15 @@ SORTED_GUITAR_REPRESENTATIONS = {
 		"Degree" :				ScaleDegreeNoStringsRepresentationWide,
 		"Letter Wide":			BasicNoStringsRepresentationWide,
 		"Letter Ultra Wide":	BasicNoStringsRepresentationUltraWide,
+		"NoS Ext Dots":			DotExtensionRepresentationWide,
+		"NoS Ext Dots 1":		DotThrid1ExtensionRepresentationWide,
+		"NoS Ext Dots 2":		DotThrid2ExtensionRepresentationWide,
+		"NoS Dots 1":			NoSDotThrid1RepresentationWide,
+		"NoS Dots 2":			NoSDotThrid2RepresentationWide,
+		"NoS Dots M 1":			NoSDotThrid1RepresentationMicro,
+		"NoS Dots M 2 ":		NoSDotThrid2RepresentationMicro,
+
+
 	},
 	'Full Name': {
 		"Full Name Wide":		FullNameRepresentationWide,
@@ -877,6 +1080,8 @@ SORTED_GUITAR_REPRESENTATIONS = {
 	'Clean': {
 		"clean":				CleanRepresentation,
 		"clean arp":			CleanArpRepresentation,
+		"NoS Dots M 1":			NoSDotThrid1RepresentationMicro,
+		"NoS Dots M 2 ":		NoSDotThrid2RepresentationMicro,
 	},	
 }
 

@@ -28,6 +28,8 @@ pip install -r requirements.txt
 - `space-bar` to make a selection.
 - Also use `Mouse` to navigate, and `space-bar` to select.
 
+**Known issues**
+If the cursor moves into the fretboard grid, then it can not escape via `arrow keys`.  One must use the mouse to click another option and hit `space`.
 
 ## Cool things
 - `NoteInterval` has a `%` operator.  Useful for `NoteInterval(semitones=13) % 12`
