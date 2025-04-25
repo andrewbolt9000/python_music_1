@@ -1,0 +1,75 @@
+
+
+
+
+
+
+
+
+
+
+classes:
+
+class Instrument() # interface / abstract class ?
+class Guitar() 				# Dependency inject tuning?
+class GuitarFretboard() 
+class GuitarTuning()		# List of GuitarNote?  tools for refrencing strings human vs comp readable
+class GuitarString(Note) # Single Note or List of Notes
+class GuitarNote(Note)		# Inherit Note?  Dependency inject Guitar?
+
+
+'''
+
+Choices:
+
+Tuning is list of Note, OR List of string?
+
+String is just the notes at 0, OR All Notes on a string
+
+
+
+
+
+
+Goals:
+make it trivially easy to view computer vs human index of tuning and fretboard
+apply filters to fretboard, scales, range/hand-position, 
+
+
+Propigate filters down to GuitarNote.  
+- what can be propigated
+- what can be dependency injected and computed on the spot VS what attribute are progated down from Fretboard
+- Should Fretboard have indexed pointers to notes? so Fredboard Notes dont have to be iterated across
+
+
+
+
+'''
+	List[List[GuitarNote]]
+
+GuitarNote(*guitar, note)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

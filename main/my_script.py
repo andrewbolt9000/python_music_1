@@ -2,9 +2,9 @@
 
 
 from lib.guitar import Guitar
-from lib.guitar_representation import GUITAR_REPRESENTATIONS
+# from lib.guitar_representation import GUITAR_REPRESENTATIONS
 from lib.scale import Scale
-from lib.note import Note
+from lib.note import Note, NoteInterval
 
 
 
@@ -16,6 +16,18 @@ from curses import wrapper
 from time import sleep
 
 
+print('test')
+
+note = Note(full_name='E3')
+print(f'start: {note}')
+for i in range(1, 12):
+    print(f'i: {i}')
+    note = note + NoteInterval(semitones=1)
+    print(note)
+
+
+
+exit()
 
 class bcolors:
     HEADER = '\033[95m'

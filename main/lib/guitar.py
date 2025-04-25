@@ -14,6 +14,7 @@ class Guitar:
 	A_SPECIAL = 'Andre Special' 
 	FRIPP = 'New Standard' 
 	BOUZOUKI = 'Bouzouki'
+	BASS_GUITAR = 'Bass'
 	SEVEN_STR = '7 String'
 	TUNING_DEFINITIONS = {
 		STANDARD 	: ['E2', 'A2', 'D3', 'G3', 'B3', 'E4'],
@@ -22,6 +23,7 @@ class Guitar:
 		SEVEN_STR   : ['B2', 'E2', 'A2', 'D3', 'G3', 'B3', 'E4'],
 		FRIPP   	: ['C2', 'G2', 'D3', 'A3', 'E4', 'G4'],
 		BOUZOUKI   	: ['D2', 'A2', 'E3', 'B3'],
+		BASS_GUITAR : ['E1', 'A1', 'D2', 'G2'],
 	}
 
 
@@ -210,4 +212,111 @@ class Guitar:
 		else:
 			print(readable)
 
+
+
+class GuitarStringException(Exception):
+    def __init__(self, message, errors=None):            
+        # Call the base class constructor with the parameters it needs
+        super().__init__(message)
+          
+
+class GuitarString:
+	note = None 
+	human_number = None
+
+	def __init__(self, note, human_number):
+		self.note = note 
+		self.human_number = human_number
+
+	def __repr__(self):
+		return f'<GuitarString note:{self.note.full_name}  human_number:{self.human_number}>'
+
+class GuitarNoteException(Exception):
+    def __init__(self, message, errors=None):            
+        # Call the base class constructor with the parameters it needs
+        super().__init__(message)
+          
+
+class GuitarNote(Note):
+	_note = None 
+	_fret = None
+
+	# Represents literal wire strings of a guitar (not char strings)
+	_guitar_string_number = None 
+	_guitar_string_name = None 
+
+	def __init__(self, guitar, note=None, *args, **kwargs):
+		self._guitar = guitar 
+		# ??? Nessessary for debug?  Inheritance should be fine
+		self._note = note 
+		if note is None:
+			super().__init__(*args, **kwargs)
+		else:
+			super().__init__(full_name=note.full_name)
+
+	@property
+	def fret(self):
+		if self._fret is None:
+			result = GuitarNote.fret_or_string_to_note()
+		elif self._guitar_string is None:
+			pass 
+		elif self._fret is None and self._guitar_string is None:
+			# Select first one we can find (for now)
+			GuitarNote.all_fretboard_locations_for_note(note=self._note, guitar=self._guitar)
+		return self._fret
 	
+	@property
+	def guitar_string_name(self):
+		if self._guitar_string_name is None:
+			pass
+			# result = GuitarNote.fret_or_string_to_note()
+
+		return self._guitar_string_name
+
+
+	@property
+	def _guitar_string_number(self):
+		if self._guitar_string_number is None:
+			pass
+			# result = GuitarNote.fret_or_string_to_note()
+		return self._guitar_string_number
+
+
+	@staticmethod
+	def all_fretboard_locations_for_note(note, guitar):
+		locations = []
+
+		guitar_strings = []
+		for i_string_tunings, string_name in enumerate(guitar._string_tunings):
+			guitar_strings.append(
+				GuitarString(
+					note=Note(full_name=string_name), 
+					human_number=Guitar.string_number_human_readable(
+						computer_number=i_string_tunings,
+						total_strings=len(guitar._string_tunings)
+					)
+				)
+			)
+
+		# print(guitar_strings)
+		print('================')
+
+		for guitar_string in guitar_strings:
+
+			difference = note - guitar_string.note
+			print(note)
+			print(guitar_string.note)
+			print(difference.semitones)
+			print('----------')
+			# difference = guitar_string.note - note
+			if difference.semitones >= 0:
+				locations.append(dict(guitar_string=guitar_string, fret=difference.semitones))
+		return locations
+
+
+
+
+
+
+
+

@@ -55,6 +55,7 @@ If the cursor moves into the fretboard grid, then it can not escape via `arrow k
 - Scale - detect scale
 - Chords
 	- detect chord
+- **Chord Families**
 - Doc comments
 - Extend Scale to undersand extensions.
 - Fretboard render uses `Notes` and their properties, (which means `Notes` would need `self.root_note`; which raises the question whether notes exist with in a tonal context??  Maybe `Scales` shoule really be made of `NoteIntervals`??  or `ScaleNote`?  We want an extened `Note` class which knows what key+scale and therfore what names it should be using for each note.)
@@ -68,7 +69,7 @@ If the cursor moves into the fretboard grid, then it can not escape via `arrow k
 
 #### Future Features
 - scale info box
-- monkey patch npyscreen to print color text output...
+- **DONE** __monkey patch npyscreen to print color text output...__
 - More midi support (without pygame.midi)
 
 ## Future related projects

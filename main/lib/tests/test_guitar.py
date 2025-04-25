@@ -2,7 +2,7 @@
 
 import pytest
 
-from lib.guitar import Guitar 
+from lib.guitar import Guitar, GuitarNote
 from lib.scale import Scale
 from lib.note import Note
 
@@ -49,4 +49,26 @@ class TestGuitar:
 			representation=representation,
 		)
 		assert testee == [['⎯⎯E', '⎯⎯F', '⎯⎯⎯', '⎯⎯G', '⎯⎯⎯', '⎯⎯A', '⎯⎯⎯'], ['⎯⎯⎯', '⎯⎯B', '⎯⎯C', '⎯⎯⎯', '⎯⎯D', '⎯⎯⎯', '⎯⎯E']]
+
+
+class TestGuitarNote:
+	# def test_guitar_note_init(self):
+	# 	note = Note(full_name='A4')
+
+	# 	testee = GuitarNote(note=note, guitar=guitar)
+
+	# 	testee
+
+
+	def test_all_fretboard_locations_for_note(self):
+
+		# scale = Scale(root_name='A', mode_name='aeolian')
+		guitar = Guitar(tuning='standard', scale=None)
+		note = Note(full_name='A3')
+		result = GuitarNote.all_fretboard_locations_for_note(note=note, guitar=guitar)
+		assert result == None, result
+
+
+
+
 

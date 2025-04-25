@@ -132,6 +132,12 @@ class NoteInterval:
 			# assert semitones >= 0, 'Invalid NoteInterval'
 			self._semitones = semitones
 
+	def __str__(self):
+		return f'<NoteInterval {self.semitones}>'
+
+	def __repr__(self):
+		return f'<NoteInterval {self.semitones}>'
+
 	@property
 	def name(self):
 		if self._name is None:
@@ -142,6 +148,7 @@ class NoteInterval:
 				direction = ''
 			self._name = f'{self.INTERVAL_NAMES[self._semitones]}{direction}'
 		return self._name 
+
 
 	@name.setter
 	def name(self, value):
@@ -216,6 +223,7 @@ class Note:
 		'G#' 
 	]
 	_name = _frequency = _semitones_from_a = None
+	_a_tuning = None
 	_full_name = None
 	_octave = None 
 	_absolute_value = None 
@@ -284,13 +292,17 @@ class Note:
 
 	@staticmethod
 	def full_name_to_name_and_octave(full_name):
-		# Parse
-		if full_name[1] != '#':
-			name = full_name[0:1]
-			octave = int(full_name[1:])
-		elif full_name[1] == '#':
-			name = full_name[0:2]
-			octave = int(full_name[2:])
+		try:
+			# Parse
+			if full_name[1] != '#':
+				name = full_name[0:1]
+				octave = int(full_name[1:])
+			elif full_name[1] == '#':
+				name = full_name[0:2]
+				octave = int(full_name[2:])
+		except IndexError:
+			raise NoteError(f'invalid full_name: "{full_name}"')
+
 		# Validate
 		assert name in Note.NOTE_NAMES_2
 		assert octave in list(range(0, 10))
@@ -310,7 +322,7 @@ class Note:
 			raise NoteError('Cant add these types.')
 		elif type(obj) is NoteInterval:
 			result = self.absolute_value + obj.semitones 
-			return Note(absolute_value=result)
+			return Note(absolute_value=result, a_tuning=self._a_tuning)
 		else:
 			raise NoteError('Cant add these types.')
 
@@ -322,7 +334,7 @@ class Note:
 			return NoteInterval(semitones=difference)
 		elif type(obj) is NoteInterval:
 			difference = self.absolute_value - obj.semitones
-			return Note(absolute_value=difference)
+			return Note(absolute_value=difference, a_tuning=self._a_tuning)
 		else:
 			raise NoteError('Cant subtract these types.')
 

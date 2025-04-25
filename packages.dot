@@ -1,0 +1,14 @@
+digraph "packages" {
+rankdir=BT
+charset="utf-8"
+"python_music_1.main.lib" [color="black", label=<python_music_1.main.lib>, shape="box", style="solid"];
+"python_music_1.main.lib.guitar" [color="black", label=<python_music_1.main.lib.guitar>, shape="box", style="solid"];
+"python_music_1.main.lib.guitar_representation" [color="black", label=<python_music_1.main.lib.guitar_representation>, shape="box", style="solid"];
+"python_music_1.main.lib.note" [color="black", label=<python_music_1.main.lib.note>, shape="box", style="solid"];
+"python_music_1.main.lib.scale" [color="black", label=<python_music_1.main.lib.scale>, shape="box", style="solid"];
+"python_music_1.main.lib.tests" [color="black", label=<python_music_1.main.lib.tests>, shape="box", style="solid"];
+"python_music_1.main.lib.tests.test_guitar" [color="black", label=<python_music_1.main.lib.tests.test_guitar>, shape="box", style="solid"];
+"python_music_1.main.lib.tests.test_guitar_representation" [color="black", label=<python_music_1.main.lib.tests.test_guitar_representation>, shape="box", style="solid"];
+"python_music_1.main.lib.tests.test_note" [color="black", label=<python_music_1.main.lib.tests.test_note>, shape="box", style="solid"];
+"python_music_1.main.lib.tests.test_scale" [color="black", label=<python_music_1.main.lib.tests.test_scale>, shape="box", style="solid"];
+}
